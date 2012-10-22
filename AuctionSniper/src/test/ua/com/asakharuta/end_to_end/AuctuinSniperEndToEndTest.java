@@ -2,6 +2,7 @@ package test.ua.com.asakharuta.end_to_end;
 
 import static org.junit.Assert.*;
 
+import org.junit.After;
 import org.junit.Test;
 
 public class AuctuinSniperEndToEndTest
@@ -20,4 +21,13 @@ public class AuctuinSniperEndToEndTest
 		application.showsSniperHasLostAuction();
 	}
 
+	@After 
+	public void stopAuction(){
+		auction.stop();
+	}
+	
+	@After
+	public void stopApplicaion(){
+		application.stop();
+	}
 }
