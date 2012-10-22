@@ -26,6 +26,7 @@
         <javac destdir="${app.classes.dir}"
                srcdir="${app.src.dir}"
                classpathref="app.lib.path" 
+        	   includeantruntime="false"
         	   debug="on"/>
     </target>
 
@@ -43,6 +44,7 @@
         <waitfor checkevery="1" checkeveryunit="second" maxwait="20" timeoutproperty="openfire.is.down">
             <http url="http://localhost:9090" />
         </waitfor>
+    	<fail message="OpenFire is not running" if="openfire.is.down"/>
     </target>
     
     <target name="test.run"
