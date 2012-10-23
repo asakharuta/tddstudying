@@ -6,15 +6,11 @@ import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
-
+import static ua.com.asakharuta.auctionsniper.common.Constants.*;
 public class FakeAuctionServer
 {
 	static final String XMPP_HOSTNAME = "user-hp";
 
-	private static final String ITEM_ID_AS_LOGIN = "auction-%s";
-	private static final String AUCTION_PASSWORD = "auction";
-	private static final String AUCTION_RESOURCE = "Auction";
-	
 	private final String itemId;
 	private final Connection connection;
 

@@ -1,8 +1,8 @@
 package ua.com.asakharuta.end_to_end;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import ua.com.asakharuta.auctionsniper.Main;
 import ua.com.asakharuta.auctionsniper.SniperStatus;
+import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
 import com.objogate.wl.swing.driver.JFrameDriver;
@@ -19,7 +19,7 @@ public class AuctionSniperDriver extends JFrameDriver
 	{
 		super(new GesturePerformer(), 
 			  JFrameDriver.topLevelFrame(
-										named(Main.MAIN_WINDOW_NAME),
+										named(MainWindow.MAIN_WINDOW_NAME),
 										showingOnScreen()),
 				new AWTEventQueueProber(timeoutMillis, pollDelayMillis));
 	}
@@ -27,7 +27,7 @@ public class AuctionSniperDriver extends JFrameDriver
 	@SuppressWarnings("unchecked")
 	public void showsSniperStatus(SniperStatus sniperStatus)
 	{
-		new JLabelDriver(this, named(Main.SNIPER_STATUS_NAME)).hasText(equalTo(sniperStatus.getText()));
+		new JLabelDriver(this, named(MainWindow.SNIPER_STATUS_NAME)).hasText(equalTo(sniperStatus.getStatusText()));
 	}
 
 }
