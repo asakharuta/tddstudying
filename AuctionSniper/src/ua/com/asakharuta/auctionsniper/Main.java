@@ -29,27 +29,33 @@ public class Main
 	}
 	
 	public static void main(String... args) throws InterruptedException, InvocationTargetException, XMPPException{
-		new Main();
-		XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
-		Chat chat  = connection.getChatManager().createChat(auctionId(args[ARG_ITEM_ID],connection), 
-				new MessageListener()
-				{
-					
-					@Override
-					public void processMessage(Chat arg0, Message arg1)
-					{
-						// TODO Auto-generated method stub
-					}
-				});
-		chat.sendMessage(new Message());
+		Main main = new Main();
+		main.joinAuction(connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]),args[ARG_ITEM_ID]);
 	}
 	
+	private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException
+	{
+		Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), 
+				new MessageListener()
+		{
+			
+			@Override
+			public void processMessage(Chat arg0, Message arg1)
+			{
+				mainWindow.showStatus(SniperStatus.LOST);
+			}
+		});
+		this.notToBeGarbageCollected = chat;
+		
+		chat.sendMessage(new Message());
+	}
+
 	private static String auctionId(String itemId, XMPPConnection connection)
 	{
 		return String.format(AUCTION_ID_FORMAT, itemId,connection.getServiceName());
 	}
 
-	private static XMPPConnection connectTo(String hostname, String username, String password) throws XMPPException
+	private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException
 	{
 		XMPPConnection connection = new XMPPConnection(hostname);
 		connection.connect(); 
@@ -69,4 +75,8 @@ public class Main
 			}
 		});
 	}
+	
+	
+	@SuppressWarnings("unused")
+	private Chat notToBeGarbageCollected;
 }
