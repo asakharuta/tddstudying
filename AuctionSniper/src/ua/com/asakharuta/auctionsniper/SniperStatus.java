@@ -12,7 +12,7 @@ public enum SniperStatus
 		this.text = text;
 	}
 	
-	public String getText()
+	public String getStatusText()
 	{
 		return text;
 	}
