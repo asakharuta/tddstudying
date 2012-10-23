@@ -23,42 +23,33 @@ public class Main
 	private static final int ARG_ITEM_ID = 3;
 	
 	private MainWindow mainWindow;
-
-	@SuppressWarnings("unused")
-	private Chat notToBeGarbageCollected;
 	
 	public Main() throws InterruptedException, InvocationTargetException{
 		startUserInterface();
 	}
 	
 	public static void main(String... args) throws InterruptedException, InvocationTargetException, XMPPException{
-		Main main = new Main();
-		main.joinAuction(connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]),args[ARG_ITEM_ID]);
-	}
-	
-	private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException
-	{
-		Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), 
+		new Main();
+		XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+		Chat chat  = connection.getChatManager().createChat(auctionId(args[ARG_ITEM_ID],connection), 
 				new MessageListener()
-		{
-			
-			@Override
-			public void processMessage(Chat arg0, Message arg1)
-			{
-				mainWindow.showStatus(SniperStatus.LOST);
-			}
-		});
-		this.notToBeGarbageCollected = chat;
-		
+				{
+					
+					@Override
+					public void processMessage(Chat arg0, Message arg1)
+					{
+						// TODO Auto-generated method stub
+					}
+				});
 		chat.sendMessage(new Message());
 	}
-
+	
 	private static String auctionId(String itemId, XMPPConnection connection)
 	{
 		return String.format(AUCTION_ID_FORMAT, itemId,connection.getServiceName());
 	}
 
-	private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException
+	private static XMPPConnection connectTo(String hostname, String username, String password) throws XMPPException
 	{
 		XMPPConnection connection = new XMPPConnection(hostname);
 		connection.connect(); 
