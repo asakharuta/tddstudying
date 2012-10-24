@@ -27,8 +27,8 @@ public class AuctionMessageTranslatorTest
 	public void notifiesAuctionClosedWhenCloseMessageReceived()
 	{
 		context.checking(new Expectations(){{
-			oneOf(listener).auctionClosed();
-		}}
+				oneOf(listener).auctionClosed();
+			}}
 		);
 	
 		Message message = new Message();
@@ -38,4 +38,21 @@ public class AuctionMessageTranslatorTest
 		context.assertIsSatisfied();
 	}
 
+	@Test
+	public void notifiesBidDetailsWhenCurrentPriceMessageReceived()
+	{
+		final int currentPrice = 192;
+		final int increment = 7;
+		
+		context.checking(new Expectations(){{
+				oneOf(listener).currentPrice(currentPrice,increment);
+			}}
+		);
+	
+		Message message = new Message();
+		message.setBody("SOLVersion: 1.1; Event: PRICE; CurrentPrice:"+ currentPrice +"; Increment: "+ increment + "; Bidder: Someone else;");
+		translator.processMessage(UNUSED_NULL_CHAT, message);
+		
+		context.assertIsSatisfied();
+	}
 }

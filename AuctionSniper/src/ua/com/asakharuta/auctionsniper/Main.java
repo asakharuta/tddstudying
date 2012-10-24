@@ -17,7 +17,7 @@ import org.jivesoftware.smack.packet.Message;
 import ua.com.asakharuta.auctionsniper.common.SniperStatus;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
-public class Main
+public class Main implements AuctionEventListener
 {
 	private static final int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
@@ -41,16 +41,7 @@ public class Main
 	private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException
 	{
 		disconnectWhenUICloses(connection);
-		Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), 
-				new MessageListener()
-		{
-			
-			@Override
-			public void processMessage(Chat arg0, Message arg1)
-			{
-				mainWindow.showStatus(SniperStatus.LOST);
-			}
-		});
+		Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), new AuctionMessageTranslator(this));
 		this.notToBeGarbageCollected = chat;
 		
 		chat.sendMessage(JOIN_COMMAND_FORMAT);
@@ -91,5 +82,35 @@ public class Main
 				mainWindow = new MainWindow();
 			}
 		});
+	}
+
+	@Override
+	public void auctionClosed()
+	{
+		try
+		{
+			SwingUtilities.invokeAndWait(new Runnable()
+			{
+				
+				@Override
+				public void run()
+				{
+					mainWindow.showStatus(SniperStatus.LOST);
+				}
+			});
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		} catch (InvocationTargetException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void currentPrice(int currentPrice, int increment)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
