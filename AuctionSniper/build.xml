@@ -57,7 +57,7 @@
         <junit>
             <batchtest todir="${test.reports.dir}" haltonfailure="true" haltonerror="true">
                 <formatter type="plain"/>
-                <fileset dir="${test.dir}" includes="**/**/**/**/**/*Test.java" />
+                <fileset dir="${test.dir}" includes="**/**/**/**/**/*EndToEndTest.java" />
             </batchtest>
             <classpath>
                 <path refid="test.lib.path" />

@@ -17,8 +17,43 @@ import org.jivesoftware.smack.packet.Message;
 import ua.com.asakharuta.auctionsniper.common.SniperStatus;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
-public class Main implements AuctionEventListener
+public class Main
 {
+	public class XMPPAuction implements Auction
+	{
+
+		private final Chat chat;
+
+		public XMPPAuction(Chat chat)
+		{
+			this.chat = chat;
+		}
+
+		@Override
+		public void join()
+		{
+			sendMessage(JOIN_COMMAND_FORMAT);
+		}
+		
+		@Override
+		public void bid(int amount)
+		{
+			sendMessage(String.format(BID_COMMAND_FORMAT, amount));
+		}
+
+		private void sendMessage(String message)
+		{
+			try
+			{
+				chat.sendMessage(message);
+			} catch (XMPPException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+
 	private static final int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
 	private static final int ARG_PASSWORD = 2;
@@ -41,10 +76,15 @@ public class Main implements AuctionEventListener
 	private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException
 	{
 		disconnectWhenUICloses(connection);
-		Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), new AuctionMessageTranslator(this));
+		
+		
+		final Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), null);
 		this.notToBeGarbageCollected = chat;
 		
-		chat.sendMessage(JOIN_COMMAND_FORMAT);
+		Auction auction = new XMPPAuction(chat);
+		
+		chat.addMessageListener(new AuctionMessageTranslator(new AuctionSniper(auction,new SniperStateDisplayer(mainWindow))));
+		auction.join();
 	}
 
 	private void disconnectWhenUICloses(final XMPPConnection connection)
@@ -82,35 +122,5 @@ public class Main implements AuctionEventListener
 				mainWindow = new MainWindow();
 			}
 		});
-	}
-
-	@Override
-	public void auctionClosed()
-	{
-		try
-		{
-			SwingUtilities.invokeAndWait(new Runnable()
-			{
-				
-				@Override
-				public void run()
-				{
-					mainWindow.showStatus(SniperStatus.LOST);
-				}
-			});
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		} catch (InvocationTargetException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void currentPrice(int currentPrice, int increment)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 }

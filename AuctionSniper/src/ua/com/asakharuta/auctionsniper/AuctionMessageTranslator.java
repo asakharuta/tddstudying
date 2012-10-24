@@ -20,25 +20,66 @@ public class AuctionMessageTranslator implements MessageListener
 	@Override
 	public void processMessage(Chat chat, Message message)
 	{
-		Map<String, String> event = unpackEventFrom(message);
+		AuctionEvent event = AuctionEvent.from(message.getBody());
 		
-		String eventType = event.get("Event");
+		String eventType = event.type();
 		if(eventType.equals("CLOSE")){
 			listener.auctionClosed();
 		}else if(eventType.equals("PRICE")){
-			listener.currentPrice(Integer.parseInt(event.get("CurrentPrice")), Integer.parseInt(event.get("Increment")));
+			listener.currentPrice(event.currentPrice(), event.increment());
 		}
 	}
 
-	private Map<String, String> unpackEventFrom(Message message)
+	private static class AuctionEvent
 	{
-		HashMap<String, String> event = new HashMap<String,String>();
-		for (String element : message.getBody().split(";"))
+		private Map<String, String> fields  = new HashMap<String, String>();
+		
+		public static AuctionEvent from(String messageBody)
 		{
-			String[] pair = element.split(":");
-			event.put(pair[0].trim(), pair[1].trim());
+			AuctionEvent event = new AuctionEvent();
+			for (String field : fieldsIn(messageBody))
+			{
+				event.addField(field);
+			}
+			return event;
 		}
-		return event;
-	}
 
+		public int currentPrice()
+		{
+			return getInt("CurrentPrice");
+		}
+		
+		public int increment()
+		{
+			return getInt("Increment");
+		}
+		
+		public String type()
+		{
+			return get("Event");
+		}
+
+		private void addField(String field)
+		{
+			String[] pair = field.split(":");
+			fields.put(pair[0].trim(), pair[1].trim());
+		}
+
+		private static String[] fieldsIn(String messageBody)
+		{
+			return messageBody.split(";");
+		}
+
+
+		private String get(String field)
+		{
+			return fields.get(field);
+		}
+		
+		private int getInt(String field)
+		{
+			return Integer.parseInt(get(field));
+		}
+	}
+	
 }
