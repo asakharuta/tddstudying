@@ -11,8 +11,8 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
+import ua.com.asakharuta.auctionsniper.AuctionEventListener;
 import ua.com.asakharuta.auctionsniper.common.Constants;
-import ua.com.asakharuta.auctionsniper.common.Winner;
 import static ua.com.asakharuta.auctionsniper.common.Constants.*;
 public class FakeAuctionServer
 {
@@ -65,11 +65,11 @@ public class FakeAuctionServer
 		connection.disconnect();
 	}
 
-	public void reportPrice(int price, int increment, Winner bidder) throws XMPPException
+	public void reportPrice(int price, int increment, AuctionEventListener.PriceSource bidder) throws XMPPException
 	{
 		currentChat.sendMessage(String.format("SOLVersion: 1.1; Event: PRICE; " 
                 + "CurrentPrice: %d; Increment: %d; Bidder: %s;", 
-                price, increment, bidder.name()));
+                price, increment, bidder.getName()));
 	}
 
 	public void hasReceivedBid(int bid, String sniperXmppId) throws InterruptedException

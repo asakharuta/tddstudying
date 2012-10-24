@@ -7,13 +7,19 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
 
+import ua.com.asakharuta.auctionsniper.AuctionEventListener.PriceSource;
+
 public class AuctionMessageTranslator implements MessageListener
 {
-
+	private static final String EVENT_TYPE_CLOSE = "CLOSE";
+	private static final String EVENT_TYPE_PRICE = "PRICE";
+	
 	private final AuctionEventListener listener;
+	private final String sniperId;
 
-	public AuctionMessageTranslator(AuctionEventListener listener)
+	public AuctionMessageTranslator(String sniperId, AuctionEventListener listener)
 	{
+		this.sniperId = sniperId;
 		this.listener = listener;
 	}
 
@@ -23,14 +29,14 @@ public class AuctionMessageTranslator implements MessageListener
 		AuctionEvent event = AuctionEvent.from(message.getBody());
 		
 		String eventType = event.type();
-		if(eventType.equals("CLOSE")){
+		if(eventType.equals(EVENT_TYPE_CLOSE)){
 			listener.auctionClosed();
-		}else if(eventType.equals("PRICE")){
-			listener.currentPrice(event.currentPrice(), event.increment());
+		}else if(eventType.equals(EVENT_TYPE_PRICE)){
+			listener.currentPrice(event.currentPrice(), event.increment(), event.isFrom(sniperId));
 		}
 	}
 
-	private static class AuctionEvent
+	public static class AuctionEvent
 	{
 		private Map<String, String> fields  = new HashMap<String, String>();
 		
@@ -42,6 +48,16 @@ public class AuctionMessageTranslator implements MessageListener
 				event.addField(field);
 			}
 			return event;
+		}
+
+		public PriceSource isFrom(String sniperId)
+		{
+			return sniperId.equals(bidder()) ?AuctionEventListener.PriceSource.SNIPER :  AuctionEventListener.PriceSource.OTHER ;
+		}
+
+		private String bidder()
+		{
+			return get("Bidder");
 		}
 
 		public int currentPrice()

@@ -42,9 +42,22 @@ public class AuctionSniperTest
 			}}
 		);
 		
-		sniper.currentPrice(price, increment);
+		sniper.currentPrice(price, increment,AuctionEventListener.PriceSource.OTHER);
 	}
 
+	@Test
+	public void reportIsWinningWhenCurrentPriceComesFromSniper(){
+		final int price = 123;
+		final int increment = 45;
+		context.checking(new Expectations(){{
+				atLeast(1).of(sniperListener).sniperWinning();
+			}}
+		);
+		
+		sniper.currentPrice(price, increment,AuctionEventListener.PriceSource.SNIPER);
+		
+	}
+	
 	@After
 	public void checkExpectations(){
 		context.assertIsSatisfied();

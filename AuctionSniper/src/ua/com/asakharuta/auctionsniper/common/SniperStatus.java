@@ -4,7 +4,9 @@ public enum SniperStatus
 {
 	JOINING("Joining"), 
 	LOST("Lost"), 
-	BIDDING("Bidding")
+	BIDDING("Bidding"), 
+	WINNING("Winning"), 
+	WON("Won")
 	;
 
 	private String text;

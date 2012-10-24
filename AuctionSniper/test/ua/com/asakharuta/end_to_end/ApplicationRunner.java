@@ -40,10 +40,19 @@ public class ApplicationRunner
 		driver.showsSniperStatus(SniperStatus.BIDDING);
 	}
 	
+	public void hasShownSniperIsWinnig()
+	{
+		driver.showsSniperStatus(SniperStatus.WINNING);
+	}
+	
+	public void showsSniperHasWonAuction()
+	{
+		driver.showsSniperStatus(SniperStatus.WON);
+	}
+	
 	public void stop()
 	{
 		driver.dispose();
 	}
-
 
 }

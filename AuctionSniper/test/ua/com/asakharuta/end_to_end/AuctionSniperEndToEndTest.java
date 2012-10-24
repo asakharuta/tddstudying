@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Test;
 
 import static ua.com.asakharuta.auctionsniper.common.Constants.*;
-import ua.com.asakharuta.auctionsniper.common.Winner;
+import ua.com.asakharuta.auctionsniper.AuctionEventListener;
 
 public class AuctionSniperEndToEndTest
 {
@@ -34,13 +34,35 @@ public class AuctionSniperEndToEndTest
 		
 		int price = 1000;
 		int minimalIncriment = 98;
-		auction.reportPrice(price,minimalIncriment,Winner.OTHER);
+		auction.reportPrice(price,minimalIncriment,AuctionEventListener.PriceSource.OTHER);
 		application.hasShownSniperIsBidding();
 		
 		auction.hasReceivedBid(price+minimalIncriment, SNIPER_XMPP_ID);
 		
 		auction.announceClosed();
 		application.showsSniperHasLostAuction();
+	}
+	
+	@Test
+	public void sniperWinAnAuctionByBiddingHihger() throws XMPPException, InterruptedException{
+		auction.startSellingItem();
+		
+		application.startBiddingIn(auction);
+		auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID);
+		
+		int price = 1000;
+		int minimalIncriment = 98;
+		auction.reportPrice(price,minimalIncriment,AuctionEventListener.PriceSource.OTHER);
+		application.hasShownSniperIsBidding();
+		
+		auction.hasReceivedBid(price+minimalIncriment, SNIPER_XMPP_ID);
+		
+		int secondIncrement = 97;
+		auction.reportPrice(price, secondIncrement, AuctionEventListener.PriceSource.SNIPER);
+		application.hasShownSniperIsWinnig();
+		
+		auction.announceClosed();
+		application.showsSniperHasWonAuction();
 	}
 	
 	@After 
