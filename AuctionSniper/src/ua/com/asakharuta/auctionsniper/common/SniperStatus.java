@@ -1,9 +1,10 @@
-package ua.com.asakharuta.auctionsniper;
+package ua.com.asakharuta.auctionsniper.common;
 
 public enum SniperStatus
 {
 	JOINING("Joining"), 
-	LOST("Lost")
+	LOST("Lost"), 
+	BIDDING("Bidding")
 	;
 
 	private String text;

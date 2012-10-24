@@ -2,12 +2,14 @@ package ua.com.asakharuta.end_to_end;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+import org.hamcrest.Matcher;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
-import org.junit.Assert;
+
 
 public class SingleMessageListener implements MessageListener
 {
@@ -21,7 +23,9 @@ public class SingleMessageListener implements MessageListener
 		messages .add(message);
 	}
 
-	public void receivesAMessage() throws InterruptedException{
-		Assert.assertThat("Message",messages.poll(timeToWaitInSeconds , TimeUnit.SECONDS), is(notNullValue()));
+	public void receivesAMessage(Matcher<? super String> messageMatcher) throws InterruptedException{
+		Message message = messages.poll(timeToWaitInSeconds , TimeUnit.SECONDS);
+		assertThat("Message",message, is(notNullValue()));
+		assertThat(message.getBody(), messageMatcher);
 	}
 }

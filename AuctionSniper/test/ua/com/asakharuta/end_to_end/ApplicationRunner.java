@@ -1,11 +1,11 @@
 package ua.com.asakharuta.end_to_end;
 
 import ua.com.asakharuta.auctionsniper.Main;
-import ua.com.asakharuta.auctionsniper.SniperStatus;
+import ua.com.asakharuta.auctionsniper.common.Constants;
+import ua.com.asakharuta.auctionsniper.common.SniperStatus;
 
 public class ApplicationRunner
 {
-	private static final String SNIPER_ID = "sniper";
 	private static final String SNIPER_PASSWORD = "sniper";
 	private static final int timeToWait = 1000;
 	private AuctionSniperDriver driver = new NullDriver(timeToWait);
@@ -16,7 +16,7 @@ public class ApplicationRunner
 			@Override 
 			public void run(){
 				try{
-					Main.main(FakeAuctionServer.XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD, auction.getItemId());
+					Main.main(Constants.XMPP_HOSTNAME, Constants.SNIPER_ID, SNIPER_PASSWORD, auction.getItemId());
 				}catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -35,9 +35,15 @@ public class ApplicationRunner
 		driver.showsSniperStatus(SniperStatus.LOST);
 	}
 
+	public void hasShownSniperIsBidding()
+	{
+		driver.showsSniperStatus(SniperStatus.BIDDING);
+	}
+	
 	public void stop()
 	{
 		driver.dispose();
 	}
+
 
 }

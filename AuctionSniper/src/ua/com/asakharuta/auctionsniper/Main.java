@@ -1,8 +1,9 @@
 package ua.com.asakharuta.auctionsniper;
 
-import static ua.com.asakharuta.auctionsniper.common.Constants.AUCTION_ID_FORMAT;
-import static ua.com.asakharuta.auctionsniper.common.Constants.AUCTION_RESOURCE;
+import static ua.com.asakharuta.auctionsniper.common.Constants.*;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
@@ -13,6 +14,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
+import ua.com.asakharuta.auctionsniper.common.SniperStatus;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
 public class Main
@@ -23,6 +25,9 @@ public class Main
 	private static final int ARG_ITEM_ID = 3;
 	
 	private MainWindow mainWindow;
+	
+	@SuppressWarnings("unused")
+	private Chat notToBeGarbageCollected;
 	
 	public Main() throws InterruptedException, InvocationTargetException{
 		startUserInterface();
@@ -35,6 +40,7 @@ public class Main
 	
 	private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException
 	{
+		disconnectWhenUICloses(connection);
 		Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), 
 				new MessageListener()
 		{
@@ -47,7 +53,18 @@ public class Main
 		});
 		this.notToBeGarbageCollected = chat;
 		
-		chat.sendMessage(new Message());
+		chat.sendMessage(JOIN_COMMAND_FORMAT);
+	}
+
+	private void disconnectWhenUICloses(final XMPPConnection connection)
+	{
+		mainWindow.addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosed(WindowEvent e){
+				connection.disconnect();
+			}
+		});
 	}
 
 	private static String auctionId(String itemId, XMPPConnection connection)
@@ -75,8 +92,4 @@ public class Main
 			}
 		});
 	}
-	
-	
-	@SuppressWarnings("unused")
-	private Chat notToBeGarbageCollected;
 }

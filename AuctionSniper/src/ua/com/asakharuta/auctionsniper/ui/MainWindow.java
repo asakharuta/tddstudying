@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
-import ua.com.asakharuta.auctionsniper.SniperStatus;
+import ua.com.asakharuta.auctionsniper.common.SniperStatus;
 
 public class MainWindow extends JFrame
 {

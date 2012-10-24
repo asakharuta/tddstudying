@@ -1,16 +1,21 @@
 package ua.com.asakharuta.end_to_end;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+import org.hamcrest.Matcher;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
+
+import ua.com.asakharuta.auctionsniper.common.Constants;
+import ua.com.asakharuta.auctionsniper.common.Winner;
 import static ua.com.asakharuta.auctionsniper.common.Constants.*;
 public class FakeAuctionServer
 {
-	static final String XMPP_HOSTNAME = "user-hp";
-
 	private final String itemId;
 	private final Connection connection;
 
@@ -45,9 +50,9 @@ public class FakeAuctionServer
 		return itemId;
 	}
 
-	public void hasReceivedJoinRequestFromSniper() throws InterruptedException
+	public void hasReceivedJoinRequestFrom(String sniperXmppId) throws InterruptedException
 	{
-		messageListener.receivesAMessage();
+		receivesAMessageMatching(sniperXmppId,equalTo(Constants.JOIN_COMMAND_FORMAT));
 	}
 
 	public void announceClosed() throws XMPPException
@@ -60,4 +65,22 @@ public class FakeAuctionServer
 		connection.disconnect();
 	}
 
+	public void reportPrice(int price, int increment, Winner bidder) throws XMPPException
+	{
+		currentChat.sendMessage(String.format("SOLVersion: 1.1; Event: PRICE; " 
+                + "CurrentPrice: %d; Increment: %d; Bidder: %s;", 
+                price, increment, bidder.name()));
+	}
+
+	public void hasReceivedBid(int bid, String sniperXmppId) throws InterruptedException
+	{
+		receivesAMessageMatching(sniperXmppId, equalTo(String.format(Constants.BID_COMMAND_FORMAT, bid)));
+	}
+	
+	private void receivesAMessageMatching(String sniperXmppId,
+			Matcher<String> messageMatcher) throws InterruptedException
+	{
+		messageListener.receivesAMessage(messageMatcher);
+		assertThat(currentChat.getParticipant(), equalTo(sniperXmppId));
+	}
 }

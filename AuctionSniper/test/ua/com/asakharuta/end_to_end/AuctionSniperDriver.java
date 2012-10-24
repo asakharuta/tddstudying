@@ -1,7 +1,7 @@
 package ua.com.asakharuta.end_to_end;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import ua.com.asakharuta.auctionsniper.SniperStatus;
+import ua.com.asakharuta.auctionsniper.common.SniperStatus;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
