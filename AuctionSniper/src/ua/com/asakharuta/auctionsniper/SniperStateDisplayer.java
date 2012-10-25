@@ -34,6 +34,12 @@ public class SniperStateDisplayer implements SniperListener
 		showStatus(SniperStatus.WINNING);
 	}
 
+	@Override
+	public void sniperWon()
+	{
+		showStatus(SniperStatus.WON);
+	}
+
 	private void showStatus(final SniperStatus status)
 	{
 		try
@@ -55,6 +61,7 @@ public class SniperStateDisplayer implements SniperListener
 			e.printStackTrace();
 		}
 	}
+
 
 
 }
