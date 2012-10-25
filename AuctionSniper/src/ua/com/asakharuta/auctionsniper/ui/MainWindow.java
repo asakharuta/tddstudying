@@ -1,10 +1,11 @@
 package ua.com.asakharuta.auctionsniper.ui;
 
-import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.Container;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import ua.com.asakharuta.auctionsniper.common.SniperStatus;
 
@@ -17,28 +18,35 @@ public class MainWindow extends JFrame
 	public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
 	public static final String SNIPER_STATUS_NAME = "Sniper Status";
 	private static final String title = "Auction Sniper";
+	private static final String SNIPER_TABLE_NAME = "Auction Sniper Table";
 
-	private final JLabel sniperStatusLabel = createLabel(SniperStatus.JOINING);
-
+	private final SnipersTableModel snipers = new SnipersTableModel();
+	
 	public MainWindow(){
 		super(title);
 		setName(MAIN_WINDOW_NAME);
-		add(sniperStatusLabel);
+		fillContentPane(makeSnipersTable());
 		pack();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
 
-	private JLabel createLabel(SniperStatus sniperStatus)
+	private void fillContentPane(JTable snipersTable)
 	{
-		JLabel resultLabel = new JLabel(sniperStatus.getStatusText());
-		resultLabel.setName(SNIPER_STATUS_NAME);
-		resultLabel.setBorder(new LineBorder(Color.BLACK));
-		return resultLabel;
+		final Container contentPane = getContentPane();
+		contentPane.setLayout(new BorderLayout());
+		contentPane.add(new JScrollPane(snipersTable), BorderLayout.CENTER);
 	}
-	
+
+	private JTable makeSnipersTable()
+	{
+		final JTable snipersTable = new JTable(snipers);
+		snipersTable.setName(SNIPER_TABLE_NAME);
+		return snipersTable;
+	}
+
 	public void showStatus(SniperStatus sniperStatus)
 	{
-		sniperStatusLabel.setText(sniperStatus.getStatusText());
+		snipers.setStatusText(sniperStatus);
 	}
 }

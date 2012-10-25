@@ -2,8 +2,6 @@ package ua.com.asakharuta.unit;
 
 import static org.junit.Assert.*;
 
-import java.util.EventListener;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
@@ -14,13 +12,16 @@ import ua.com.asakharuta.auctionsniper.Auction;
 import ua.com.asakharuta.auctionsniper.AuctionEventListener;
 import ua.com.asakharuta.auctionsniper.AuctionSniper;
 import ua.com.asakharuta.auctionsniper.SniperListener;
+import ua.com.asakharuta.auctionsniper.SniperSnapshot;
+import ua.com.asakharuta.auctionsniper.common.Constants;
+import ua.com.asakharuta.auctionsniper.common.SniperStatus;
 
 public class AuctionSniperTest
 {
 	private final Mockery context = new Mockery();
 	private final SniperListener sniperListener = context.mock(SniperListener.class);
 	private final Auction auction = context.mock(Auction.class);
-	private final AuctionEventListener sniper = new AuctionSniper(auction,sniperListener);
+	private final AuctionEventListener sniper = new AuctionSniper(auction,Constants.ITEM_ID_1,sniperListener);
 	private final States sniperState = context.states("sniper");
 	
 	@Test
@@ -38,7 +39,7 @@ public class AuctionSniperTest
 	public void reportsLostIfAuctionClosesWhenBidding(){
 		context.checking(new Expectations(){{
 				ignoring(auction);
-				allowing(sniperListener).sniperBidding();then(sniperState.is("bidding"));
+				allowing(sniperListener).sniperBidding(with(any(SniperSnapshot.class)));then(sniperState.is("bidding"));
 				atLeast(1).of(sniperListener).sniperLost(); when(sniperState.is("bidding"));
 			}}
 		);
@@ -52,9 +53,10 @@ public class AuctionSniperTest
 	public void bidsHigherAndReportsBiddingWhenNewPriceArrives(){
 		final int price = 1001;
 		final int increment = 25;
+		final int bid = price + increment;
 		context.checking(new Expectations(){{
-				one(auction).bid(price+increment);
-				atLeast(1).of(sniperListener).sniperBidding();
+				one(auction).bid(bid);
+				atLeast(1).of(sniperListener).sniperBidding( new SniperSnapshot(Constants.ITEM_ID_1, price, bid, SniperStatus.BIDDING));
 			}}
 		);
 		

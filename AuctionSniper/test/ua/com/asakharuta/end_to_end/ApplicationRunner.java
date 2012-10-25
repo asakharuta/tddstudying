@@ -9,9 +9,11 @@ public class ApplicationRunner
 	private static final String SNIPER_PASSWORD = "sniper";
 	private static final int timeToWait = 1000;
 	private AuctionSniperDriver driver = new NullDriver(timeToWait);
+	private String itemId;
 
 	public void startBiddingIn(final FakeAuctionServer auction)
 	{
+		itemId  = auction.getItemId();
 		Thread thread  = new Thread("Test Application"){
 			@Override 
 			public void run(){
@@ -35,16 +37,19 @@ public class ApplicationRunner
 		driver.showsSniperStatus(SniperStatus.LOST);
 	}
 
+	//TODO delete
 	public void hasShownSniperIsBidding()
 	{
 		driver.showsSniperStatus(SniperStatus.BIDDING);
 	}
 	
+	//TODO delete
 	public void hasShownSniperIsWinnig()
 	{
 		driver.showsSniperStatus(SniperStatus.WINNING);
 	}
 	
+	//TODO delete
 	public void showsSniperHasWonAuction()
 	{
 		driver.showsSniperStatus(SniperStatus.WON);
@@ -53,6 +58,21 @@ public class ApplicationRunner
 	public void stop()
 	{
 		driver.dispose();
+	}
+
+	public void hasShownSniperIsBidding(int price, int bid)
+	{
+		driver.showsSniperStatus(itemId,price,bid,SniperStatus.BIDDING);
+	}
+
+	public void hasShownSniperIsWinnig(int winningPrice)
+	{
+		driver.showsSniperStatus(itemId,winningPrice,winningPrice,SniperStatus.BIDDING);
+	}
+
+	public void showsSniperHasWonAuction(int price)
+	{
+		driver.showsSniperStatus(itemId,price,price,SniperStatus.BIDDING);
 	}
 
 }

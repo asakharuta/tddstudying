@@ -12,4 +12,5 @@ public class Constants
 	
 	public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
 	public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
+	public static final String ITEM_ID_1 = "item-54321";
 }

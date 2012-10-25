@@ -8,5 +8,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/develop"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/smack"/>
 	<classpathentry kind="lib" path="C:/Andrii/workspace/tddstudying/AuctionSniper/lib/develop/jmock-2.5.1.jar"/>
+	<classpathentry kind="lib" path="C:/Andrii/workspace/tddstudying/AuctionSniper/lib/develop/commons-lang3-3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

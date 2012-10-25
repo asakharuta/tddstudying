@@ -22,6 +22,7 @@ public class SniperStateDisplayer implements SniperListener
 		showStatus(SniperStatus.LOST);
 	}
 
+	//TODO delete
 	@Override
 	public void sniperBidding()
 	{
@@ -62,6 +63,9 @@ public class SniperStateDisplayer implements SniperListener
 		}
 	}
 
-
-
+	@Override
+	public void sniperBidding(SniperSnapshot sniperSnapshot)
+	{
+		showStatus(SniperStatus.BIDDING);
+	}
 }

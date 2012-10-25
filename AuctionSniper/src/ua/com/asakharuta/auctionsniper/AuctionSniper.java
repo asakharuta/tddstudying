@@ -1,15 +1,19 @@
 package ua.com.asakharuta.auctionsniper;
 
+import ua.com.asakharuta.auctionsniper.common.SniperStatus;
+
 public class AuctionSniper implements AuctionEventListener
 {
 
 	private final SniperListener sniperListener;
 	private final Auction auction;
 	private boolean isWinning = false;
+	private final String itemId;
 
-	public AuctionSniper(Auction auction, SniperListener sniperListener)
+	public AuctionSniper(Auction auction, String itemid, SniperListener sniperListener)
 	{
 		this.auction = auction;
+		this.itemId = itemid;
 		this.sniperListener = sniperListener;
 	}
 	
@@ -30,8 +34,9 @@ public class AuctionSniper implements AuctionEventListener
 		if(isWinning){
 			sniperListener.sniperWinning();
 		}else{
-			auction.bid(currentPrice+increment);
-			sniperListener.sniperBidding();
+			int bid = currentPrice+increment;
+			auction.bid(bid);
+			sniperListener.sniperBidding(new SniperSnapshot(this.itemId, currentPrice, bid, SniperStatus.BIDDING));
 		}
 	}
 }
