@@ -6,7 +6,7 @@ public enum SniperStatus
 	LOST("Lost"), 
 	BIDDING("Bidding"), 
 	WINNING("Winning"), 
-	WON("Won")
+	WON("Won"), 
 	;
 
 	private String text;

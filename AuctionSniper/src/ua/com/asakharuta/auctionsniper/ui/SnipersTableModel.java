@@ -2,6 +2,7 @@ package ua.com.asakharuta.auctionsniper.ui;
 
 import javax.swing.table.AbstractTableModel;
 
+import ua.com.asakharuta.auctionsniper.SniperSnapshot;
 import ua.com.asakharuta.auctionsniper.common.SniperStatus;
 
 public class SnipersTableModel extends AbstractTableModel
@@ -11,12 +12,44 @@ public class SnipersTableModel extends AbstractTableModel
 	 * 
 	 */
 	private static final long serialVersionUID = -8020703731512421093L;
-	private SniperStatus sniperStatus= SniperStatus.JOINING;
+	
+	public enum Column{
+		ITEM_IDENTIFIER(0),
+		LAST_PRICE(1),
+		LAST_BID(2),
+		SNIPER_STATUS(3), 
+		;
+		
+		private final int position;
 
+		private Column(int position){
+			this.position = position;
+		}
+		
+		public static Column at(int position){
+			for (Column column : values())
+			{
+				if (column.position == position)
+				{
+					return column;
+				}
+			}
+			throw new IllegalArgumentException("No column at " + position);
+		}
+
+		public int getPosition()
+		{
+			return position;
+		}
+	}
+	
+	private SniperSnapshot sniperStatus= new SniperSnapshot("", 0, 0, SniperStatus.JOINING);
+	private SniperStatus status = sniperStatus.state;
+	
 	@Override
 	public int getColumnCount()
 	{
-		return 1;
+		return Column.values().length;
 	}
 
 	@Override
@@ -28,13 +61,34 @@ public class SnipersTableModel extends AbstractTableModel
 	@Override
 	public Object getValueAt(int row, int column)
 	{
-		return sniperStatus.getStatusText();
+		switch (Column.at(column))
+		{
+		case ITEM_IDENTIFIER:
+			return sniperStatus.itemId;
+		case LAST_PRICE:
+			return sniperStatus.lastPrice;
+		case LAST_BID:
+			return sniperStatus.lastBid;
+		case SNIPER_STATUS:
+			return status.getStatusText();
+
+		default:
+			throw new IllegalArgumentException("No column at " + column);
+		}
 	}
 
+	//TODO delete
 	public void setStatusText(SniperStatus sniperStatus)
 	{
-		this.sniperStatus = sniperStatus;
+		this.status = sniperStatus;
 		fireTableDataChanged();
+	}
+
+	public void sniperStatusChanged(SniperSnapshot sniperSnapshot)
+	{
+		this.sniperStatus  = sniperSnapshot;
+		status = sniperStatus.state;
+		fireTableRowsUpdated(0, 0);
 	}
 
 }

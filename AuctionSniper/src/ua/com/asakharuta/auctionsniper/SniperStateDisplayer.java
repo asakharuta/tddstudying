@@ -22,13 +22,6 @@ public class SniperStateDisplayer implements SniperListener
 		showStatus(SniperStatus.LOST);
 	}
 
-	//TODO delete
-	@Override
-	public void sniperBidding()
-	{
-		showStatus(SniperStatus.BIDDING);
-	}
-
 	@Override
 	public void sniperWinning()
 	{
@@ -41,6 +34,7 @@ public class SniperStateDisplayer implements SniperListener
 		showStatus(SniperStatus.WON);
 	}
 
+	//TODO delete
 	private void showStatus(final SniperStatus status)
 	{
 		try
@@ -66,6 +60,29 @@ public class SniperStateDisplayer implements SniperListener
 	@Override
 	public void sniperBidding(SniperSnapshot sniperSnapshot)
 	{
-		showStatus(SniperStatus.BIDDING);
+		sniperStatusChanged(sniperSnapshot);
+	}
+
+	private void sniperStatusChanged(final SniperSnapshot sniperSnapshot)
+	{
+		try
+		{
+			SwingUtilities.invokeAndWait(new Runnable()
+			{
+				
+				@Override
+				public void run()
+				{
+					mainWindow.sniperStatusChanged(sniperSnapshot);
+				}
+			});
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		} catch (InvocationTargetException e)
+		{
+			e.printStackTrace();
+		}
+		
 	}
 }
