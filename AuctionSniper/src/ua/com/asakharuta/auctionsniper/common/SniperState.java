@@ -1,6 +1,6 @@
 package ua.com.asakharuta.auctionsniper.common;
 
-public enum SniperStatus
+public enum SniperState
 {
 	JOINING("Joining"), 
 	LOST("Lost"), 
@@ -11,7 +11,7 @@ public enum SniperStatus
 
 	private String text;
 
-	private SniperStatus(String text){
+	private SniperState(String text){
 		this.text = text;
 	}
 	

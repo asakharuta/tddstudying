@@ -4,15 +4,15 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import ua.com.asakharuta.auctionsniper.common.SniperStatus;
+import ua.com.asakharuta.auctionsniper.common.SniperState;
 
 public class SniperSnapshot {
   public final String itemId;
   public final int lastPrice;
   public final int lastBid;
-  public final SniperStatus state;
+  public final SniperState state;
   
-  public SniperSnapshot(String itemId, int lastPrice, int lastBid, SniperStatus state) {
+  public SniperSnapshot(String itemId, int lastPrice, int lastBid, SniperState state) {
     this.itemId = itemId;
     this.lastPrice = lastPrice;
     this.lastBid = lastBid;
@@ -32,5 +32,20 @@ public class SniperSnapshot {
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this);
+  }
+
+  public static SniperSnapshot joining(String itemId)
+  {
+	return new SniperSnapshot(itemId, 0,0, SniperState.JOINING);
+  }
+
+  public SniperSnapshot winning(int newLastPrice)
+  {
+	return new SniperSnapshot(itemId, newLastPrice, lastBid, SniperState.WINNING);
+  }
+
+  public SniperSnapshot bidding(int newLastPrice, int newLastBid)
+  {
+	 return new SniperSnapshot(itemId, newLastPrice, newLastBid, SniperState.BIDDING);
   }
 }

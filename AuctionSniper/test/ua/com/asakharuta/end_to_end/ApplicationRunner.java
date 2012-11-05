@@ -2,7 +2,7 @@ package ua.com.asakharuta.end_to_end;
 
 import ua.com.asakharuta.auctionsniper.Main;
 import ua.com.asakharuta.auctionsniper.common.Constants;
-import ua.com.asakharuta.auctionsniper.common.SniperStatus;
+import ua.com.asakharuta.auctionsniper.common.SniperState;
 
 public class ApplicationRunner
 {
@@ -28,31 +28,31 @@ public class ApplicationRunner
 		thread.start();
 		
 		driver = new AuctionSniperDriver(timeToWait);
-		driver.showsSniperStatus(SniperStatus.JOINING);
+		driver.showsSniperStatus(SniperState.JOINING);
 		
 	}
 
 	public void showsSniperHasLostAuction()
 	{
-		driver.showsSniperStatus(SniperStatus.LOST);
+		driver.showsSniperStatus(SniperState.LOST);
 	}
 
 	//TODO delete
 	public void hasShownSniperIsBidding()
 	{
-		driver.showsSniperStatus(SniperStatus.BIDDING);
+		driver.showsSniperStatus(SniperState.BIDDING);
 	}
 	
 	//TODO delete
 	public void hasShownSniperIsWinnig()
 	{
-		driver.showsSniperStatus(SniperStatus.WINNING);
+		driver.showsSniperStatus(SniperState.WINNING);
 	}
 	
 	//TODO delete
 	public void showsSniperHasWonAuction()
 	{
-		driver.showsSniperStatus(SniperStatus.WON);
+		driver.showsSniperStatus(SniperState.WON);
 	}
 	
 	public void stop()
@@ -62,17 +62,17 @@ public class ApplicationRunner
 
 	public void hasShownSniperIsBidding(int price, int bid)
 	{
-		driver.showsSniperStatus(itemId,price,bid,SniperStatus.BIDDING);
+		driver.showsSniperStatus(itemId,price,bid,SniperState.BIDDING);
 	}
 
 	public void hasShownSniperIsWinnig(int winningPrice)
 	{
-		driver.showsSniperStatus(itemId,winningPrice,winningPrice,SniperStatus.BIDDING);
+		driver.showsSniperStatus(itemId,winningPrice,winningPrice,SniperState.WINNING);
 	}
 
 	public void showsSniperHasWonAuction(int price)
 	{
-		driver.showsSniperStatus(itemId,price,price,SniperStatus.BIDDING);
+		driver.showsSniperStatus(itemId,price,price,SniperState.WON);
 	}
 
 }

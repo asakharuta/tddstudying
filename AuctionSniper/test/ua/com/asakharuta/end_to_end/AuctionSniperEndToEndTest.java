@@ -63,10 +63,10 @@ public class AuctionSniperEndToEndTest
 		priceBefore = currentPrice;
 		currentPrice += secondIncrement;
 		auction.reportPrice(priceBefore, secondIncrement, AuctionEventListener.PriceSource.SNIPER);
-		application.hasShownSniperIsWinnig(currentPrice);
+		application.hasShownSniperIsWinnig(priceBefore);
 		
 		auction.announceClosed();
-		application.showsSniperHasWonAuction(currentPrice);
+		application.showsSniperHasWonAuction(priceBefore);
 	}
 
 	@Test

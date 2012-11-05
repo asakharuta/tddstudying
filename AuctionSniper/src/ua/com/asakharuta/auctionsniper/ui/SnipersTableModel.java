@@ -3,7 +3,7 @@ package ua.com.asakharuta.auctionsniper.ui;
 import javax.swing.table.AbstractTableModel;
 
 import ua.com.asakharuta.auctionsniper.SniperSnapshot;
-import ua.com.asakharuta.auctionsniper.common.SniperStatus;
+import ua.com.asakharuta.auctionsniper.common.SniperState;
 
 public class SnipersTableModel extends AbstractTableModel
 {
@@ -17,7 +17,7 @@ public class SnipersTableModel extends AbstractTableModel
 		ITEM_IDENTIFIER(0),
 		LAST_PRICE(1),
 		LAST_BID(2),
-		SNIPER_STATUS(3), 
+		SNIPER_STATE(3), 
 		;
 		
 		private final int position;
@@ -43,8 +43,8 @@ public class SnipersTableModel extends AbstractTableModel
 		}
 	}
 	
-	private SniperSnapshot sniperStatus= new SniperSnapshot("", 0, 0, SniperStatus.JOINING);
-	private SniperStatus status = sniperStatus.state;
+	private SniperSnapshot sniperStatus= new SniperSnapshot("", 0, 0, SniperState.JOINING);
+	private SniperState state = sniperStatus.state;
 	
 	@Override
 	public int getColumnCount()
@@ -69,8 +69,8 @@ public class SnipersTableModel extends AbstractTableModel
 			return sniperStatus.lastPrice;
 		case LAST_BID:
 			return sniperStatus.lastBid;
-		case SNIPER_STATUS:
-			return status.getStatusText();
+		case SNIPER_STATE:
+			return state.getStatusText();
 
 		default:
 			throw new IllegalArgumentException("No column at " + column);
@@ -78,16 +78,16 @@ public class SnipersTableModel extends AbstractTableModel
 	}
 
 	//TODO delete
-	public void setStatusText(SniperStatus sniperStatus)
+	public void setStatusText(SniperState sniperStatus)
 	{
-		this.status = sniperStatus;
+		this.state = sniperStatus;
 		fireTableDataChanged();
 	}
 
 	public void sniperStatusChanged(SniperSnapshot sniperSnapshot)
 	{
 		this.sniperStatus  = sniperSnapshot;
-		status = sniperStatus.state;
+		state = sniperStatus.state;
 		fireTableRowsUpdated(0, 0);
 	}
 

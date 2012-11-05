@@ -3,7 +3,7 @@ package ua.com.asakharuta.end_to_end;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
 import static com.objogate.wl.swing.matcher.IterableComponentsMatcher.matching;
-import ua.com.asakharuta.auctionsniper.common.SniperStatus;
+import ua.com.asakharuta.auctionsniper.common.SniperState;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
@@ -28,14 +28,14 @@ public class AuctionSniperDriver extends JFrameDriver
 
 	//TODO delete
 	@SuppressWarnings("unchecked")
-	public void showsSniperStatus(SniperStatus sniperStatus)
+	public void showsSniperStatus(SniperState sniperStatus)
 	{
 		new JTableDriver(this).hasCell(withLabelText(equalTo(sniperStatus.getStatusText())));
 	}
 
 	@SuppressWarnings("unchecked")
 	public void showsSniperStatus(String itemId, int price, int bid,
-			SniperStatus sniperStatus)
+			SniperState sniperStatus)
 	{
 		JTableDriver table = new JTableDriver(this);
 		table.hasRow(matching(

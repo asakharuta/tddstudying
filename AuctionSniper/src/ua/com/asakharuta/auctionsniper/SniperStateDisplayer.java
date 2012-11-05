@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
 
-import ua.com.asakharuta.auctionsniper.common.SniperStatus;
+import ua.com.asakharuta.auctionsniper.common.SniperState;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
 public class SniperStateDisplayer implements SniperListener
@@ -19,23 +19,17 @@ public class SniperStateDisplayer implements SniperListener
 	@Override
 	public void sniperLost()
 	{
-		showStatus(SniperStatus.LOST);
-	}
-
-	@Override
-	public void sniperWinning()
-	{
-		showStatus(SniperStatus.WINNING);
+		showStatus(SniperState.LOST);
 	}
 
 	@Override
 	public void sniperWon()
 	{
-		showStatus(SniperStatus.WON);
+		showStatus(SniperState.WON);
 	}
 
 	//TODO delete
-	private void showStatus(final SniperStatus status)
+	private void showStatus(final SniperState status)
 	{
 		try
 		{
@@ -58,7 +52,7 @@ public class SniperStateDisplayer implements SniperListener
 	}
 
 	@Override
-	public void sniperBidding(SniperSnapshot sniperSnapshot)
+	public void sniperStateChanged(SniperSnapshot sniperSnapshot)
 	{
 		sniperStatusChanged(sniperSnapshot);
 	}

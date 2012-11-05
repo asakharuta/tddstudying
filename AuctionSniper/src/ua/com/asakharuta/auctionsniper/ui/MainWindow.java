@@ -8,7 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import ua.com.asakharuta.auctionsniper.SniperSnapshot;
-import ua.com.asakharuta.auctionsniper.common.SniperStatus;
+import ua.com.asakharuta.auctionsniper.common.SniperState;
 
 public class MainWindow extends JFrame
 {
@@ -47,7 +47,7 @@ public class MainWindow extends JFrame
 	}
 
 	//TODO delete
-	public void showStatus(SniperStatus sniperStatus)
+	public void showStatus(SniperState sniperStatus)
 	{
 		snipers.setStatusText(sniperStatus);
 	}
