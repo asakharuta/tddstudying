@@ -23,7 +23,7 @@ public class AuctionSniperEndToEndTest
 		auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID);
 		
 		auction.announceClosed();
-		application.showsSniperHasLostAuction();
+		application.showsSniperHasLostAuction(0,0);
 	}
 
 	@Test
@@ -33,15 +33,16 @@ public class AuctionSniperEndToEndTest
 		application.startBiddingIn(auction);
 		auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID);
 		
-		int price = 1000;
+		int priceBefore = 1000;
 		int minimalIncriment = 98;
-		auction.reportPrice(price,minimalIncriment,AuctionEventListener.PriceSource.OTHER);
-		application.hasShownSniperIsBidding();
+		int currentPrice = priceBefore + minimalIncriment;
+		auction.reportPrice(priceBefore,minimalIncriment,AuctionEventListener.PriceSource.OTHER);
+		application.hasShownSniperIsBidding(priceBefore,currentPrice);
 		
-		auction.hasReceivedBid(price+minimalIncriment, SNIPER_XMPP_ID);
+		auction.hasReceivedBid(currentPrice, SNIPER_XMPP_ID);
 		
 		auction.announceClosed();
-		application.showsSniperHasLostAuction();
+		application.showsSniperHasLostAuction(priceBefore,currentPrice);
 	}
 	
 	@Test
@@ -76,25 +77,30 @@ public class AuctionSniperEndToEndTest
 		application.startBiddingIn(auction);
 		auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID);
 		
-		int price = 1000;
+		int priceBefore = 1000;
 		int minimalIncriment = 98;
-		auction.reportPrice(price,minimalIncriment,AuctionEventListener.PriceSource.OTHER);
-		application.hasShownSniperIsBidding();
+		int currentPrice = priceBefore + minimalIncriment;
+		auction.reportPrice(priceBefore,minimalIncriment,AuctionEventListener.PriceSource.OTHER);
+		application.hasShownSniperIsBidding(priceBefore,currentPrice);
 		
-		auction.hasReceivedBid(price+minimalIncriment, SNIPER_XMPP_ID);
+		auction.hasReceivedBid(currentPrice, SNIPER_XMPP_ID);
 		
 		int secondIncrement = 97;
-		auction.reportPrice(price, secondIncrement, AuctionEventListener.PriceSource.SNIPER);
-		application.hasShownSniperIsWinnig();
+		priceBefore = currentPrice;
+		currentPrice += secondIncrement;
+		auction.reportPrice(priceBefore, secondIncrement, AuctionEventListener.PriceSource.SNIPER);
+		application.hasShownSniperIsWinnig(priceBefore);
 
 		int thirdIncrement = 96;
-		auction.reportPrice(price, thirdIncrement, AuctionEventListener.PriceSource.OTHER);
-		application.hasShownSniperIsBidding();
+		priceBefore = currentPrice;
+		currentPrice += thirdIncrement;
+		auction.reportPrice(priceBefore, thirdIncrement, AuctionEventListener.PriceSource.OTHER);
+		application.hasShownSniperIsBidding(priceBefore,currentPrice);
 		
-		auction.hasReceivedBid(price+thirdIncrement, SNIPER_XMPP_ID);
+		auction.hasReceivedBid(currentPrice, SNIPER_XMPP_ID);
 		
 		auction.announceClosed();
-		application.showsSniperHasLostAuction();
+		application.showsSniperHasLostAuction(priceBefore,currentPrice);
 	}
 	
 	

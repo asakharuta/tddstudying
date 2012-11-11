@@ -26,13 +26,6 @@ public class AuctionSniperDriver extends JFrameDriver
 				new AWTEventQueueProber(timeoutMillis, pollDelayMillis));
 	}
 
-	//TODO delete
-	@SuppressWarnings("unchecked")
-	public void showsSniperStatus(SniperState sniperStatus)
-	{
-		new JTableDriver(this).hasCell(withLabelText(equalTo(sniperStatus.getStatusText())));
-	}
-
 	@SuppressWarnings("unchecked")
 	public void showsSniperStatus(String itemId, int price, int bid,
 			SniperState sniperStatus)

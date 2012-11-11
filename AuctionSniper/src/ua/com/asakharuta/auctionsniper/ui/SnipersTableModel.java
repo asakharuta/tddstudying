@@ -77,13 +77,6 @@ public class SnipersTableModel extends AbstractTableModel
 		}
 	}
 
-	//TODO delete
-	public void setStatusText(SniperState sniperStatus)
-	{
-		this.state = sniperStatus;
-		fireTableDataChanged();
-	}
-
 	public void sniperStatusChanged(SniperSnapshot sniperSnapshot)
 	{
 		this.sniperStatus  = sniperSnapshot;

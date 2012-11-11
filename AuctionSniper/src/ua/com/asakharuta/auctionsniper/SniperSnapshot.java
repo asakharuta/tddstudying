@@ -48,4 +48,9 @@ public class SniperSnapshot {
   {
 	 return new SniperSnapshot(itemId, newLastPrice, newLastBid, SniperState.BIDDING);
   }
+
+  public SniperSnapshot closed()
+  {
+	return new SniperSnapshot(itemId, lastPrice, lastBid, state.whenAuctionClosed());
+  }
 }

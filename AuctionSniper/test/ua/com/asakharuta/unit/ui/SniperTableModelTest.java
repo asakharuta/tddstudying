@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 
-import javax.jws.Oneway;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 

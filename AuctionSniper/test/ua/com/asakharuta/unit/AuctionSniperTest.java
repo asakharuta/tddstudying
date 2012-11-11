@@ -1,6 +1,5 @@
 package ua.com.asakharuta.unit;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
 import org.hamcrest.FeatureMatcher;
@@ -43,7 +42,7 @@ public class AuctionSniperTest
 	public void reportsLostWhenAuctionClosesImmidiately()
 	{
 		context.checking(new Expectations(){{
-				atLeast(1).of(sniperListener).sniperLost();
+			atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(Constants.ITEM_ID_1, 0, 0, SniperState.LOST));
 			}}
 		);
 		
@@ -57,8 +56,8 @@ public class AuctionSniperTest
 		context.checking(new Expectations(){{
 				ignoring(auction);
 				allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.BIDDING)));then(sniperState.is("bidding"));
-				atLeast(1).of(sniperListener).sniperLost(); when(sniperState.is("bidding"));
-//				atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(Constants.ITEM_ID_1, price, price+increment, SniperState.LOST)); when(sniperState.is("bidding"));
+//				atLeast(1).of(sniperListener).sniperLost(); when(sniperState.is("bidding"));
+				atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(Constants.ITEM_ID_1, price, price+increment, SniperState.LOST)); when(sniperState.is("bidding"));
 			}}
 		);
 		sniper.currentPrice(price, increment, AuctionEventListener.PriceSource.OTHER);
@@ -76,7 +75,7 @@ public class AuctionSniperTest
 				ignoring(auction);
 				allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.BIDDING)));then(sniperState.is("bidding"));
 				atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(Constants.ITEM_ID_1, bid, bid, SniperState.WINNING)); when(sniperState.is("bidding"));
-				atLeast(1).of(sniperListener).sniperWon();
+				atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(Constants.ITEM_ID_1, bid, bid, SniperState.WON)); 
 			}}
 		);
 		
@@ -110,7 +109,7 @@ public class AuctionSniperTest
 		context.checking(new Expectations(){{
 				ignoring(auction);
 				allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.WINNING))); then(sniperState.is("winning"));
-				atLeast(1).of(sniperListener).sniperWon(); when(sniperState.is("winning"));
+				atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(Constants.ITEM_ID_1, price, 0, SniperState.WON));when(sniperState.is("winning")); 
 			}}
 		);
 		

@@ -9,12 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
-
-import ua.com.asakharuta.auctionsniper.common.SniperState;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
 public class Main

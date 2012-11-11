@@ -9,7 +9,6 @@ import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 
 import ua.com.asakharuta.auctionsniper.AuctionEventListener;
 import ua.com.asakharuta.auctionsniper.common.Constants;

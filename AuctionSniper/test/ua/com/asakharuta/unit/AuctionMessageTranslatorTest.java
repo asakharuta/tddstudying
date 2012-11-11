@@ -1,15 +1,9 @@
 package ua.com.asakharuta.unit;
 
-import static org.junit.Assert.*;
-
-import org.hamcrest.Description;
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.api.Expectation;
-import org.jmock.api.Invocation;
 import org.junit.After;
 import org.junit.Test;
 
