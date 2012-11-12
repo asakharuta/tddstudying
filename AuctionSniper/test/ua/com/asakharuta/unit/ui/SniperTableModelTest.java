@@ -43,6 +43,15 @@ public class SniperTableModelTest
 	}
 
 	@Test
+	public void setsUpColumnHeaders()
+	{
+		for (Column column : Column.values())
+		{
+			assertEquals(column.name, model.getColumnName(column.index));
+		}
+	}
+	
+	@Test
 	public void setsSnipersValuesInColumns()
 	{
 		context.checking(new Expectations(){{
@@ -53,7 +62,7 @@ public class SniperTableModelTest
 		int lastBid = 666;
 		String itemId = "item_id";
 		SniperState sniperStatus = SniperState.BIDDING;
-		model.sniperStatusChanged(new SniperSnapshot(itemId, lastPrice, lastBid, sniperStatus));
+		model.sniperStateChanged(new SniperSnapshot(itemId, lastPrice, lastBid, sniperStatus));
 		
 		assertColumnEquals(Column.ITEM_IDENTIFIER,itemId);
 		assertColumnEquals(Column.LAST_PRICE,lastPrice);
@@ -65,8 +74,7 @@ public class SniperTableModelTest
 	private void assertColumnEquals(Column column, Object expected)
 	{
 		final int rowIndex = 0;
-		final int columnIndex = column.getPosition();
-		assertEquals(expected, model.getValueAt(rowIndex, columnIndex));
+		assertEquals(expected, model.getValueAt(rowIndex, column.index));
 	}
 
 	protected Matcher<TableModelEvent> aRowChangedEvent()

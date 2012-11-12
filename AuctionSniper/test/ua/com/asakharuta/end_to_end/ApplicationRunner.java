@@ -3,6 +3,7 @@ package ua.com.asakharuta.end_to_end;
 import ua.com.asakharuta.auctionsniper.Main;
 import ua.com.asakharuta.auctionsniper.common.Constants;
 import ua.com.asakharuta.auctionsniper.common.SniperState;
+import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
 public class ApplicationRunner
 {
@@ -28,6 +29,8 @@ public class ApplicationRunner
 		thread.start();
 		
 		driver = new AuctionSniperDriver(timeToWait);
+		driver.hasTitle(MainWindow.TITLE);
+		driver.hasColumnTitles();
 		driver.showsSniperStatus("", 0, 0, SniperState.JOINING);
 		
 	}

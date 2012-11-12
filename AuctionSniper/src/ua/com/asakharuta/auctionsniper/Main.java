@@ -12,6 +12,7 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
+import ua.com.asakharuta.auctionsniper.ui.SnipersTableModel;
 
 public class Main
 {
@@ -55,6 +56,7 @@ public class Main
 	private static final int ARG_PASSWORD = 2;
 	private static final int ARG_ITEM_ID = 3;
 	
+	private final SnipersTableModel snipers = new SnipersTableModel();
 	private MainWindow mainWindow;
 	
 	@SuppressWarnings("unused")
@@ -79,7 +81,7 @@ public class Main
 		
 		Auction auction = new XMPPAuction(chat);
 		
-		chat.addMessageListener(new AuctionMessageTranslator(connection.getUser(),new AuctionSniper(auction,itemId,new SniperStateDisplayer(mainWindow))));
+		chat.addMessageListener(new AuctionMessageTranslator(connection.getUser(),new AuctionSniper(auction,itemId,new SwingThreadSniperListener(snipers))));
 		auction.join();
 	}
 
@@ -115,7 +117,7 @@ public class Main
 			@Override
 			public void run()
 			{
-				mainWindow = new MainWindow();
+				mainWindow = new MainWindow(snipers);
 			}
 		});
 	}
