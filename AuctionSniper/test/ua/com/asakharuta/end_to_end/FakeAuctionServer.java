@@ -39,7 +39,7 @@ public class FakeAuctionServer
 			public void chatCreated(Chat chat, boolean createdLocally)
 			{
 				currentChat = chat;
-				chat.addMessageListener(messageListener);
+				currentChat.addMessageListener(messageListener);
 			}
 		});
 	}

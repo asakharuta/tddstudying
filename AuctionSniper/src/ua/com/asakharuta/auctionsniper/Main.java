@@ -5,6 +5,9 @@ import static ua.com.asakharuta.auctionsniper.common.Constants.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -59,30 +62,45 @@ public class Main
 	private final SnipersTableModel snipers = new SnipersTableModel();
 	private MainWindow mainWindow;
 	
-	@SuppressWarnings("unused")
-	private Chat notToBeGarbageCollected;
+	private final List<Chat> notToBeGarbageCollected = new ArrayList<Chat>();
 	
 	public Main() throws InterruptedException, InvocationTargetException{
 		startUserInterface();
 	}
 	
 	public static void main(String... args) throws InterruptedException, InvocationTargetException, XMPPException{
+		System.out.println(Arrays.toString(args));
 		Main main = new Main();
-		main.joinAuction(connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]),args[ARG_ITEM_ID]);
+		XMPPConnection connection = connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+		main.disconnectWhenUICloses(connection);
+		for(int i = ARG_ITEM_ID; i < args.length; ++i){
+			main.joinAuction(connection,args[i]);
+		}
 	}
 	
-	private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException
+	private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException, InterruptedException, InvocationTargetException
 	{
-		disconnectWhenUICloses(connection);
-		
-		
+		safelyAddItemToModel(itemId);
 		final Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), null);
-		this.notToBeGarbageCollected = chat;
+		this.notToBeGarbageCollected.add(chat);
 		
 		Auction auction = new XMPPAuction(chat);
 		
 		chat.addMessageListener(new AuctionMessageTranslator(connection.getUser(),new AuctionSniper(auction,itemId,new SwingThreadSniperListener(snipers))));
 		auction.join();
+	}
+
+	private void safelyAddItemToModel(final String itemId) throws InterruptedException, InvocationTargetException
+	{
+		SwingUtilities.invokeAndWait(new Runnable()
+		{
+			
+			@Override
+			public void run()
+			{
+				snipers.addSniper(SniperSnapshot.joining(itemId));
+			}
+		});
 	}
 
 	private void disconnectWhenUICloses(final XMPPConnection connection)

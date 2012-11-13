@@ -20,7 +20,8 @@ public class SingleMessageListener implements MessageListener
 	@Override
 	public void processMessage(Chat arg0, Message message)
 	{
-		messages .add(message);
+		System.out.println("Get message " + message.getBody());
+		messages.add(message);
 	}
 
 	public void receivesAMessage(Matcher<? super String> messageMatcher) throws InterruptedException{
