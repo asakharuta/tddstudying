@@ -57,7 +57,6 @@ public class Main
 	private static final int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
 	private static final int ARG_PASSWORD = 2;
-	private static final int ARG_ITEM_ID = 3;
 	
 	private final SnipersTableModel snipers = new SnipersTableModel();
 	private MainWindow mainWindow;
@@ -73,32 +72,25 @@ public class Main
 		Main main = new Main();
 		XMPPConnection connection = connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
 		main.disconnectWhenUICloses(connection);
-		for(int i = ARG_ITEM_ID; i < args.length; ++i){
-			main.joinAuction(connection,args[i]);
-		}
+		main.addUserRequestListenerFor(connection);
 	}
 	
-	private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException, InterruptedException, InvocationTargetException
+	private void addUserRequestListenerFor(final XMPPConnection connection)
 	{
-		safelyAddItemToModel(itemId);
-		final Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), null);
-		this.notToBeGarbageCollected.add(chat);
-		
-		Auction auction = new XMPPAuction(chat);
-		
-		chat.addMessageListener(new AuctionMessageTranslator(connection.getUser(),new AuctionSniper(auction,itemId,new SwingThreadSniperListener(snipers))));
-		auction.join();
-	}
-
-	private void safelyAddItemToModel(final String itemId) throws InterruptedException, InvocationTargetException
-	{
-		SwingUtilities.invokeAndWait(new Runnable()
+		mainWindow.addUserRequestListener(new UserRequestListener()
 		{
 			
 			@Override
-			public void run()
+			public void joinAuction(final String itemId)
 			{
 				snipers.addSniper(SniperSnapshot.joining(itemId));
+				final Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), null);
+				notToBeGarbageCollected.add(chat);
+				
+				Auction auction = new XMPPAuction(chat);
+				
+				chat.addMessageListener(new AuctionMessageTranslator(connection.getUser(),new AuctionSniper(auction,itemId,new SwingThreadSniperListener(snipers))));
+				auction.join();
 			}
 		});
 	}

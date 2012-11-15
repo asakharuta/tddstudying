@@ -15,4 +15,6 @@ public class Constants
 	public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
 	public static final String ITEM_ID_1 = "item-54321";
 	public static final String ITEM_ID_2 = "item-65432";
+	public static final String NEW_ITEM_ID_NAME = "item id";
+	public static final String JOIN_BUTTON_NAME = "JOIN";
 }
