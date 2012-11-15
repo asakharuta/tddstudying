@@ -7,7 +7,6 @@ import javax.swing.table.AbstractTableModel;
 
 import ua.com.asakharuta.auctionsniper.SniperListener;
 import ua.com.asakharuta.auctionsniper.SniperSnapshot;
-import ua.com.asakharuta.auctionsniper.common.Constants;
 import ua.com.asakharuta.auctionsniper.common.Defect;
 import ua.com.asakharuta.auctionsniper.common.SniperState;
 

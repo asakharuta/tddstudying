@@ -14,6 +14,8 @@ import javax.swing.SwingUtilities;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+
+import ua.com.asakharuta.auctionsniper.common.Announcer;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 import ua.com.asakharuta.auctionsniper.ui.SnipersTableModel;
 
@@ -23,10 +25,12 @@ public class Main
 	{
 
 		private final Chat chat;
-
-		public XMPPAuction(Chat chat)
+		private final Announcer<AuctionEventListener> auctionEventListeners  = Announcer.to(AuctionEventListener.class);
+		
+		public XMPPAuction(XMPPConnection connection, String itemId)
 		{
-			this.chat = chat;
+			this.chat = connection.getChatManager().createChat(auctionId(itemId,connection), 
+					new AuctionMessageTranslator(connection.getUser(),auctionEventListeners.announce()));
 		}
 
 		@Override
@@ -52,6 +56,17 @@ public class Main
 			}
 		}
 
+		private String auctionId(String itemId, XMPPConnection connection)
+		{
+			return String.format(AUCTION_ID_FORMAT, itemId,connection.getServiceName());
+		}
+		
+		@Override
+		public void addAuctionEventListener(AuctionSniper auctionSniper)
+		{
+			auctionEventListeners.addListener(auctionSniper);
+		}
+
 	}
 
 	private static final int ARG_HOSTNAME = 0;
@@ -61,7 +76,7 @@ public class Main
 	private final SnipersTableModel snipers = new SnipersTableModel();
 	private MainWindow mainWindow;
 	
-	private final List<Chat> notToBeGarbageCollected = new ArrayList<Chat>();
+	private final List<Auction> notToBeGarbageCollected = new ArrayList<Auction>();
 	
 	public Main() throws InterruptedException, InvocationTargetException{
 		startUserInterface();
@@ -84,12 +99,12 @@ public class Main
 			public void joinAuction(final String itemId)
 			{
 				snipers.addSniper(SniperSnapshot.joining(itemId));
-				final Chat chat  = connection.getChatManager().createChat(auctionId(itemId,connection), null);
-				notToBeGarbageCollected.add(chat);
 				
-				Auction auction = new XMPPAuction(chat);
+				Auction auction = new XMPPAuction(connection,itemId);
+				notToBeGarbageCollected.add(auction);
 				
-				chat.addMessageListener(new AuctionMessageTranslator(connection.getUser(),new AuctionSniper(auction,itemId,new SwingThreadSniperListener(snipers))));
+				auction.addAuctionEventListener(new AuctionSniper(auction,itemId,new SwingThreadSniperListener(snipers)));
+				
 				auction.join();
 			}
 		});
@@ -106,10 +121,6 @@ public class Main
 		});
 	}
 
-	private static String auctionId(String itemId, XMPPConnection connection)
-	{
-		return String.format(AUCTION_ID_FORMAT, itemId,connection.getServiceName());
-	}
 
 	private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException
 	{

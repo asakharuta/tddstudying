@@ -8,7 +8,6 @@ import javax.swing.JTextField;
 import javax.swing.table.JTableHeader;
 
 import ua.com.asakharuta.auctionsniper.common.Constants;
-import ua.com.asakharuta.auctionsniper.common.SniperState;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
