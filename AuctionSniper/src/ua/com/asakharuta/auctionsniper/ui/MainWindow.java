@@ -13,7 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import ua.com.asakharuta.auctionsniper.SniperSnapshot;
+import ua.com.asakharuta.auctionsniper.SniperPortfolio;
 import ua.com.asakharuta.auctionsniper.UserRequestListener;
 import ua.com.asakharuta.auctionsniper.common.Announcer;
 import ua.com.asakharuta.auctionsniper.common.Constants;
@@ -29,14 +29,14 @@ public class MainWindow extends JFrame
 	public static final String TITLE = "Auction Sniper";
 	private static final String SNIPER_TABLE_NAME = "Auction Sniper Table";
 
-	private final SnipersTableModel snipers;
-	protected Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
+	protected final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
+	private final SniperPortfolio portfolio;
 	
-	public MainWindow(SnipersTableModel snipers){
+	public MainWindow(SniperPortfolio portfolio){
 		super(TITLE);
 		setName(MAIN_WINDOW_NAME);
 		
-		this.snipers = snipers;
+		this.portfolio = portfolio;
 		
 		fillContentPane(makeSnipersTable(),makeControls());
 		pack();
@@ -78,14 +78,11 @@ public class MainWindow extends JFrame
 
 	private JTable makeSnipersTable()
 	{
-		final JTable snipersTable = new JTable(snipers);
+		SnipersTableModel model = new SnipersTableModel();
+		portfolio.addPortfolioListener(model);
+		final JTable snipersTable = new JTable(model);
 		snipersTable.setName(SNIPER_TABLE_NAME);
 		return snipersTable;
-	}
-
-	public void sniperStateChanged(SniperSnapshot sniperSnapshot)
-	{
-		snipers.sniperStateChanged(sniperSnapshot);
 	}
 
 	public void addUserRequestListener(UserRequestListener userRequestListener)

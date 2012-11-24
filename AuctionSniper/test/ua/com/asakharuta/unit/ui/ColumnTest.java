@@ -1,12 +1,12 @@
 package ua.com.asakharuta.unit.ui;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import ua.com.asakharuta.auctionsniper.SniperSnapshot;
 import ua.com.asakharuta.auctionsniper.common.SniperState;
-import ua.com.asakharuta.auctionsniper.ui.SnipersTableModel.Column;
+import ua.com.asakharuta.auctionsniper.ui.Column;
 
 public class ColumnTest
 {

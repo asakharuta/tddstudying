@@ -1,10 +1,11 @@
-package ua.com.asakharuta.auctionsniper;
+package ua.com.asakharuta.auctionsniper.ui;
 
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
 
-import ua.com.asakharuta.auctionsniper.ui.SnipersTableModel;
+import ua.com.asakharuta.auctionsniper.SniperListener;
+import ua.com.asakharuta.auctionsniper.SniperSnapshot;
 
 public class SwingThreadSniperListener implements SniperListener
 {

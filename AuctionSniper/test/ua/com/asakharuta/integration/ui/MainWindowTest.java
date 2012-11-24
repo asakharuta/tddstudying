@@ -1,12 +1,12 @@
 package ua.com.asakharuta.integration.ui;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import org.junit.Test;
 
+import ua.com.asakharuta.auctionsniper.SniperPortfolio;
 import ua.com.asakharuta.auctionsniper.UserRequestListener;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
-import ua.com.asakharuta.auctionsniper.ui.SnipersTableModel;
 import ua.com.asakharuta.end_to_end.AuctionSniperDriver;
 
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
@@ -14,8 +14,7 @@ import com.objogate.wl.swing.probe.ValueMatcherProbe;
 public class MainWindowTest
 {
 
-	private final SnipersTableModel tableModel = new SnipersTableModel();
-	private final MainWindow mainWindow = new MainWindow(tableModel);
+	private final MainWindow mainWindow = new MainWindow(new SniperPortfolio());
 	private final AuctionSniperDriver driver = new AuctionSniperDriver(100);
 
 	@Test

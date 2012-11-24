@@ -19,8 +19,8 @@ import org.junit.Test;
 import ua.com.asakharuta.auctionsniper.SniperSnapshot;
 import ua.com.asakharuta.auctionsniper.common.Defect;
 import ua.com.asakharuta.auctionsniper.common.SniperState;
+import ua.com.asakharuta.auctionsniper.ui.Column;
 import ua.com.asakharuta.auctionsniper.ui.SnipersTableModel;
-import ua.com.asakharuta.auctionsniper.ui.SnipersTableModel.Column;
 
 public class SniperTableModelTest
 {
@@ -65,7 +65,7 @@ public class SniperTableModelTest
 			}}
 		);
 
-		model.addSniper(joining);
+		model.addSniperSnapshot(joining);
 		model.sniperStateChanged(bidding);
 	
 		assertRowMatchesSnapshot(0, bidding);
@@ -79,7 +79,7 @@ public class SniperTableModelTest
 
 		    assertEquals(0, model.getRowCount());
 		    
-		    model.addSniper(joining);
+		    model.addSniperSnapshot(joining);
 		    
 		    assertEquals(1, model.getRowCount());
 		    assertRowMatchesSnapshot(0, joining);
@@ -94,8 +94,8 @@ public class SniperTableModelTest
 	      ignoring(listener);
 	    }});
 	    
-	    model.addSniper(joining1);
-	    model.addSniper(joining2);
+	    model.addSniperSnapshot(joining1);
+	    model.addSniperSnapshot(joining2);
 	    
 	    assertEquals("item123", cellValue(0, Column.ITEM_IDENTIFIER));
 	    assertEquals("item234", cellValue(1, Column.ITEM_IDENTIFIER));
@@ -111,8 +111,8 @@ public class SniperTableModelTest
 	      one(listener).tableChanged(with(aChangeInRow(1)));
 	    }});
 	    
-	    model.addSniper(joining1);
-	    model.addSniper(joining2);
+	    model.addSniperSnapshot(joining1);
+	    model.addSniperSnapshot(joining2);
 	    
 
 	    SniperSnapshot winning1 = joining2.winning(123);

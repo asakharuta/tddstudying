@@ -8,6 +8,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import ua.com.asakharuta.auctionsniper.Auction;
@@ -23,7 +24,7 @@ public class AuctionSniperTest
 	private final Mockery context = new Mockery();
 	private final SniperListener sniperListener = context.mock(SniperListener.class);
 	private final Auction auction = context.mock(Auction.class);
-	private final AuctionEventListener sniper = new AuctionSniper(auction,Constants.ITEM_ID_1,sniperListener);
+	private final AuctionSniper sniper = new AuctionSniper(auction,Constants.ITEM_ID_1);
 	private final States sniperState = context.states("sniper");
 	
 	private  Matcher<SniperSnapshot> aSniperThatIs(final SniperState state)
@@ -36,6 +37,11 @@ public class AuctionSniperTest
 				return actual.state;
 			}
 		};
+	}
+	
+	@Before
+	public void addListener(){
+		sniper.addSniperListener(sniperListener);
 	}
 	
 	@Test

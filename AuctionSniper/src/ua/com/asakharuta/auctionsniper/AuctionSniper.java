@@ -1,17 +1,18 @@
 package ua.com.asakharuta.auctionsniper;
 
+import ua.com.asakharuta.auctionsniper.common.Announcer;
+
 
 public class AuctionSniper implements AuctionEventListener
 {
 
-	private final SniperListener sniperListener;
+	private final Announcer<SniperListener> listeners = Announcer.to(SniperListener.class);
 	private final Auction auction;
 	private SniperSnapshot lastSnapshot;
 
-	public AuctionSniper(Auction auction, String itemid, SniperListener sniperListener)
+	public AuctionSniper(Auction auction, String itemid)
 	{
 		this.auction = auction;
-		this.sniperListener = sniperListener;
 		this.lastSnapshot = SniperSnapshot.joining(itemid);
 	}
 	
@@ -37,6 +38,17 @@ public class AuctionSniper implements AuctionEventListener
 	
 	private void notifySnapshotHasChanged()
 	{
-		sniperListener.sniperStateChanged(lastSnapshot);
+		listeners.announce().sniperStateChanged(lastSnapshot);
+	}
+
+	public SniperSnapshot getSnapshot()
+	{
+		return lastSnapshot;
+	}
+
+	public void addSniperListener(
+			SniperListener listener)
+	{
+		listeners.addListener(listener);
 	}
 }
