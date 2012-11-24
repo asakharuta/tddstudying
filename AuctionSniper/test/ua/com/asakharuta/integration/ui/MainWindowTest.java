@@ -1,4 +1,4 @@
-package ua.com.asakharuta.integration;
+package ua.com.asakharuta.integration.ui;
 
 import static org.hamcrest.CoreMatchers.*;
 

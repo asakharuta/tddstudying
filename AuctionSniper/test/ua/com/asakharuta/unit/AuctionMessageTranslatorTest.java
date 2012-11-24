@@ -8,8 +8,8 @@ import org.junit.After;
 import org.junit.Test;
 
 import ua.com.asakharuta.auctionsniper.AuctionEventListener;
-import ua.com.asakharuta.auctionsniper.AuctionMessageTranslator;
 import ua.com.asakharuta.auctionsniper.common.Constants;
+import ua.com.asakharuta.auctionsniper.xmpp.AuctionMessageTranslator;
 
 public class AuctionMessageTranslatorTest
 {

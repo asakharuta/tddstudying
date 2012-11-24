@@ -1,4 +1,4 @@
-package ua.com.asakharuta.auctionsniper;
+package ua.com.asakharuta.auctionsniper.xmpp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,6 +7,7 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
 
+import ua.com.asakharuta.auctionsniper.AuctionEventListener;
 import ua.com.asakharuta.auctionsniper.AuctionEventListener.PriceSource;
 
 public class AuctionMessageTranslator implements MessageListener
