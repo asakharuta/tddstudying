@@ -1,13 +1,12 @@
 package ua.com.asakharuta.end_to_end;
 
-import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
 import static com.objogate.wl.swing.matcher.IterableComponentsMatcher.matching;
+import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.table.JTableHeader;
 
-import ua.com.asakharuta.auctionsniper.common.Constants;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
@@ -58,24 +57,25 @@ public class AuctionSniperDriver extends JFrameDriver
 				));
 	}
 
-	public void startBiddingFor(String itemId)
+	public void startBiddingFor(String itemId,int stopPrice)
 	{
-		itemIdField().replaceAllText(itemId);
+		itemIdField(MainWindow.NEW_ITEM_ID_NAME).replaceAllText(itemId);
+		itemIdField(MainWindow.NEW_ITEM_STOP_PRICE_NAME).replaceAllText(String.valueOf(stopPrice));
 		bidButton().click();
 	}
 
 	@SuppressWarnings("unchecked")
 	private JButtonDriver bidButton()
 	{
-		return new JButtonDriver(this, JButton.class,named(Constants.JOIN_BUTTON_NAME));
+		return new JButtonDriver(this, JButton.class,named(MainWindow.JOIN_BUTTON_NAME));
 	}
 
 	@SuppressWarnings("unchecked")
-	private JTextFieldDriver itemIdField()
+	private JTextFieldDriver itemIdField(String textFieldName)
 	{
-		JTextFieldDriver newItemId = new JTextFieldDriver(this, JTextField.class, named(Constants.NEW_ITEM_ID_NAME));
-		newItemId.focusWithMouse();
-		return newItemId;
+		JTextFieldDriver textField = new JTextFieldDriver(this, JTextField.class, named(textFieldName));
+		textField.focusWithMouse();
+		return textField;
 	}
 
 }

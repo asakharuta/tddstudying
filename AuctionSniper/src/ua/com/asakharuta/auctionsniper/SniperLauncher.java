@@ -1,6 +1,5 @@
 package ua.com.asakharuta.auctionsniper;
 
-import ua.com.asakharuta.auctionsniper.xmpp.AuctionHouse;
 
 public class SniperLauncher implements UserRequestListener
 {
@@ -15,10 +14,10 @@ public class SniperLauncher implements UserRequestListener
 	}
 
 	@Override
-	public void joinAuction(final String itemId)
+	public void joinAuction(final Item item)
 	{
-		Auction auction = auctionHouse.auctionFor(itemId);
-		AuctionSniper sniper = new AuctionSniper(auction,itemId);
+		Auction auction = auctionHouse.auctionFor(item);
+		AuctionSniper sniper = new AuctionSniper(auction,item);
 		auction.addAuctionEventListener(sniper);
 		collector.addSniper(sniper);
 		auction.join();

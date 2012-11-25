@@ -5,18 +5,20 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import ua.com.asakharuta.auctionsniper.Item;
 import ua.com.asakharuta.auctionsniper.SniperPortfolio;
 import ua.com.asakharuta.auctionsniper.UserRequestListener;
 import ua.com.asakharuta.auctionsniper.common.Announcer;
-import ua.com.asakharuta.auctionsniper.common.Constants;
 
 public class MainWindow extends JFrame
 {
@@ -28,6 +30,9 @@ public class MainWindow extends JFrame
 	public static final String SNIPER_STATUS_NAME = "Sniper Status";
 	public static final String TITLE = "Auction Sniper";
 	private static final String SNIPER_TABLE_NAME = "Auction Sniper Table";
+	 public static final String NEW_ITEM_ID_NAME = "item id";
+	  public static final String NEW_ITEM_STOP_PRICE_NAME = "stop price";
+	  public static final String JOIN_BUTTON_NAME = "JOIN";
 
 	protected final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
 	private final SniperPortfolio portfolio;
@@ -46,26 +51,49 @@ public class MainWindow extends JFrame
 
 	private JPanel makeControls()
 	{
-		JPanel constrols = new JPanel(new FlowLayout());
-		final JTextField itemIdField = new JTextField();
-		itemIdField.setColumns(25);
-		itemIdField.setName(Constants.NEW_ITEM_ID_NAME);
+		final JTextField itemIdField = itemIdField();
+	    final JFormattedTextField stopPriceField = stopPriceField();
+		
+	    JPanel constrols = new JPanel(new FlowLayout());
 		constrols.add(itemIdField);
+		constrols.add(stopPriceField);
 		
 		JButton joinAuctionButton = new JButton("Join auction");
-		joinAuctionButton.setName(Constants.JOIN_BUTTON_NAME);
+		joinAuctionButton.setName(JOIN_BUTTON_NAME);
 		joinAuctionButton.addActionListener(new ActionListener()
 		{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				userRequests.announce().joinAuction(itemIdField.getText());
-			}
+				userRequests.announce().joinAuction(new Item(itemId(), stopPrice())); 
+		      } 
+		      private String itemId() {
+		        return itemIdField.getText();
+		      }
+		      private int stopPrice() { 
+		        return ((Number)stopPriceField.getValue()).intValue(); 
+		      } 
 		});
 		constrols.add(joinAuctionButton);
 		
 		return constrols;
+	}
+
+	private JFormattedTextField stopPriceField()
+	{
+		final JFormattedTextField stopPriceField = new JFormattedTextField(NumberFormat.getIntegerInstance());
+		stopPriceField.setColumns(7);
+		stopPriceField.setName(NEW_ITEM_STOP_PRICE_NAME);
+		return stopPriceField;
+	}
+
+	private JTextField itemIdField()
+	{
+		final JTextField itemIdField = new JTextField();
+		itemIdField.setColumns(25);
+		itemIdField.setName(NEW_ITEM_ID_NAME);
+		return itemIdField;
 	}
 
 	private void fillContentPane(JTable snipersTable, JPanel controlPanel)

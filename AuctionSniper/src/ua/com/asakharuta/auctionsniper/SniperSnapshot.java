@@ -58,4 +58,9 @@ public class SniperSnapshot {
   {
 	return this.itemId.equals(sniperSnapshot.itemId);
   }
+
+public SniperSnapshot losing(int currentPrice)
+{
+	return new SniperSnapshot(itemId, currentPrice, lastBid, SniperState.LOSING);
+}
 }

@@ -10,10 +10,11 @@ import org.jmock.States;
 import org.junit.Test;
 
 import ua.com.asakharuta.auctionsniper.Auction;
+import ua.com.asakharuta.auctionsniper.AuctionHouse;
 import ua.com.asakharuta.auctionsniper.AuctionSniper;
+import ua.com.asakharuta.auctionsniper.Item;
 import ua.com.asakharuta.auctionsniper.SniperCollector;
 import ua.com.asakharuta.auctionsniper.SniperLauncher;
-import ua.com.asakharuta.auctionsniper.xmpp.AuctionHouse;
 
 public class SniperLauncherTest {
   private final Mockery context = new Mockery();
@@ -25,18 +26,18 @@ public class SniperLauncherTest {
   
   @Test public void
   addsNewSniperToCollectorAndThenJoinsAuction() {
-    final String itemId  = "item 123";
+		final Item item = new Item("item 123", 67);
 
     context.checking(new Expectations() {{
-      allowing(auctionHouse).auctionFor(itemId); will(returnValue(auction));
+      allowing(auctionHouse).auctionFor(item); will(returnValue(auction));
       
-      oneOf(auction).addAuctionEventListener(with(sniperForItem(itemId))); when(auctionState.is("not joined"));
-      oneOf(sniperCollector).addSniper(with(sniperForItem(itemId))); when(auctionState.is("not joined"));
+      oneOf(auction).addAuctionEventListener(with(sniperForItem(item.identifier))); when(auctionState.is("not joined"));
+      oneOf(sniperCollector).addSniper(with(sniperForItem(item.identifier))); when(auctionState.is("not joined"));
       
       one(auction).join(); then(auctionState.is("joined"));
     }});
     
-    launcher.joinAuction(itemId);
+    launcher.joinAuction(item);
   }
 
   protected Matcher<AuctionSniper>sniperForItem(String itemId) {

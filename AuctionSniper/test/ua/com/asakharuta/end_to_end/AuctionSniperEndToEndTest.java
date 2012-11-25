@@ -24,7 +24,7 @@ public class AuctionSniperEndToEndTest
 		auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID);
 		
 		auction.announceClosed();
-		application.showsSniperHasLostAuction(auction, 0,0);
+		application.hasShownSniperHasLostAuction(auction, 0,0);
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class AuctionSniperEndToEndTest
 		auction.hasReceivedBid(currentPrice, SNIPER_XMPP_ID);
 		
 		auction.announceClosed();
-		application.showsSniperHasLostAuction(auction, priceBefore,currentPrice);
+		application.hasShownSniperHasLostAuction(auction, priceBefore,currentPrice);
 	}
 	
 	@Test
@@ -131,10 +131,28 @@ public class AuctionSniperEndToEndTest
 		auction.hasReceivedBid(currentPrice, SNIPER_XMPP_ID);
 		
 		auction.announceClosed();
-		application.showsSniperHasLostAuction(auction, priceBefore,currentPrice);
+		application.hasShownSniperHasLostAuction(auction, priceBefore,currentPrice);
 	}
 	
-	
+	@Test public void 
+	  sniperLosesAnAuctionWhenThePriceIsTooHigh() throws Exception { 
+	    auction.startSellingItem(); 
+	    
+	    application.startBiddingWithStopPrice(auction, 1100); 
+	    auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID); 
+	    auction.reportPrice(1000, 98, AuctionEventListener.PriceSource.OTHER); 
+	    application.hasShownSniperIsBidding(auction, 1000, 1098);
+	    
+	    auction.hasReceivedBid(1098, SNIPER_XMPP_ID); 
+	    
+	    auction.reportPrice(1197, 10, AuctionEventListener.PriceSource.OTHER); 
+	    application.hasShownSniperIsLosing(auction, 1197, 1098); 
+	    
+	    auction.reportPrice(1207, 10, AuctionEventListener.PriceSource.OTHER); 
+	    application.hasShownSniperIsLosing(auction, 1207, 1098); 
+	    auction.announceClosed(); 
+	    application.hasShownSniperHasLostAuction(auction, 1207, 1098); 
+	  } 
 	
 	@After 
 	public void stopAuction(){

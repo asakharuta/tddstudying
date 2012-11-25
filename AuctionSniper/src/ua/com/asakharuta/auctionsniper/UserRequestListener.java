@@ -4,5 +4,5 @@ import java.util.EventListener;
 
 public interface UserRequestListener extends EventListener
 {
-	public void joinAuction(String itemId);
+	public void joinAuction(Item item);
 }

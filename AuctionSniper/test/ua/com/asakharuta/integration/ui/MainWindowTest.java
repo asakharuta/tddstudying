@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 import org.junit.Test;
 
+import ua.com.asakharuta.auctionsniper.Item;
 import ua.com.asakharuta.auctionsniper.SniperPortfolio;
 import ua.com.asakharuta.auctionsniper.UserRequestListener;
 import ua.com.asakharuta.auctionsniper.ui.MainWindow;
@@ -21,22 +22,23 @@ public class MainWindowTest
 	public void makeUserRequestWhenJoinButtonClicked()
 	{
 		final String itemId = "an item-id";
-		final ValueMatcherProbe<String> buttonProbe = new ValueMatcherProbe<String>(equalTo(itemId), "join request");
+		final int stopPrice = 13;
+		final ValueMatcherProbe<Item> itemProbe = new ValueMatcherProbe<Item>(equalTo(new Item(itemId,stopPrice)), "join request");
 		
 		mainWindow.addUserRequestListener(
 			new UserRequestListener(){
 
 				@Override
-				public void joinAuction(String itemId)
+				public void joinAuction(Item item)
 				{
-					buttonProbe.setReceivedValue(itemId);
+					itemProbe.setReceivedValue(item);
 				}
 				
 			}
 		);
 		
-		driver.startBiddingFor(itemId);
-		driver.check(buttonProbe);
+		driver.startBiddingFor(itemId, stopPrice);
+		driver.check(itemProbe);
 	}
 
 }

@@ -6,6 +6,8 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
 import ua.com.asakharuta.auctionsniper.Auction;
+import ua.com.asakharuta.auctionsniper.AuctionHouse;
+import ua.com.asakharuta.auctionsniper.Item;
 import ua.com.asakharuta.auctionsniper.common.Constants;
 
 public class XMPPAuctionHouse implements AuctionHouse
@@ -19,9 +21,9 @@ public class XMPPAuctionHouse implements AuctionHouse
 	}
 
 	@Override
-	public Auction auctionFor(String itemId)
+	public Auction auctionFor(Item item)
 	{
-		return new XMPPAuction(connection, auctionId(itemId, connection));
+		return new XMPPAuction(connection, auctionId(item.identifier, connection));
 	}
 
 	private String auctionId(String itemId, XMPPConnection connection2)
@@ -48,5 +50,4 @@ public class XMPPAuctionHouse implements AuctionHouse
 	{
 		connection.disconnect();
 	}
-
 }

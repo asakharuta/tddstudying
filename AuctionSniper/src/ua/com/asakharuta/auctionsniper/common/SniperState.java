@@ -22,6 +22,13 @@ public enum SniperState
 		}
 	}, 
 	WON("Won"), 
+	
+	LOSING("Losing"){
+		@Override
+		public SniperState whenAuctionClosed(){
+			return LOST;
+		}
+	}
 	;
 
 	private String text;
