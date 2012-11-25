@@ -64,6 +64,43 @@ public class AuctionMessageTranslatorTest
 		translator.processMessage(UNUSED_NULL_CHAT, message);
 	}
 	
+	@Test public void 
+	  notifiesAuctionFailedWhenBadMessageReceived() { 
+	    String badMessage = "a bad message";
+	    context.checking(new Expectations() {{  
+	        oneOf(listener).auctionFailed(); 
+	      }}); 
+	    Message message = new Message();
+	    message.setBody(badMessage);
+	    
+	    translator.processMessage(UNUSED_NULL_CHAT,message); 
+	  } 
+	
+	@Test public void 
+	  notifiesAuctionFailedWhenEventTypeMissing() { 
+	    String badMessage = "SOLVersion: 1.1; CurrentPrice: 234; Increment: 5; Bidder: " + Constants.SNIPER_ID + ";";
+	    context.checking(new Expectations() {{  
+	        oneOf(listener).auctionFailed(); 
+	      }}); 
+	    Message message = new Message();
+	    message.setBody(badMessage);
+
+	    translator.processMessage(UNUSED_NULL_CHAT, message); 
+	  } 
+	
+	@Test public void 
+	  notifiesAuctionFailedWhenPriceMissing() { 
+		final int increment = 5;
+	    String badMessage = "SOLVersion: 1.1; Event: PRICE; Increment: "+ increment + "; Bidder: " + Constants.SNIPER_ID+";";
+	    context.checking(new Expectations() {{  
+	        oneOf(listener).auctionFailed(); 
+	      }}); 
+	    Message message = new Message();
+	    message.setBody(badMessage);
+
+	    translator.processMessage(UNUSED_NULL_CHAT, message); 
+	  } 
+	
 	@After
 	public void checkExpectations(){
 		context.assertIsSatisfied();

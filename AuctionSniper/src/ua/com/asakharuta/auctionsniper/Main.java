@@ -5,7 +5,6 @@ import static ua.com.asakharuta.auctionsniper.common.Constants.AUCTION_RESOURCE;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
 
@@ -28,7 +27,6 @@ public class Main
 	}
 	
 	public static void main(String... args) throws InterruptedException, InvocationTargetException, XMPPException{
-		System.out.println(Arrays.toString(args));
 		Main main = new Main();
 		XMPPAuctionHouse auctionHouse = XMPPAuctionHouse.connect(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
 		main.disconnectWhenUICloses(auctionHouse);

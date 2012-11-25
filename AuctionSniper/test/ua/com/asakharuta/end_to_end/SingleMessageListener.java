@@ -20,7 +20,6 @@ public class SingleMessageListener implements MessageListener
 	@Override
 	public void processMessage(Chat arg0, Message message)
 	{
-		System.out.println("Get message " + message.getBody());
 		messages.add(message);
 	}
 

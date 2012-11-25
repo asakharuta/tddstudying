@@ -27,7 +27,17 @@ public class AuctionMessageTranslator implements MessageListener
 	@Override
 	public void processMessage(Chat chat, Message message)
 	{
-		AuctionEvent event = AuctionEvent.from(message.getBody());
+		
+		try{
+			translate(message.getBody());
+		}catch(Exception parseException){
+			listener.auctionFailed();
+		}
+	}
+
+	private void translate(String body) throws ua.com.asakharuta.auctionsniper.xmpp.AuctionMessageTranslator.AuctionEvent.MissingValueException
+	{
+		AuctionEvent event = AuctionEvent.from(body);
 		
 		String eventType = event.type();
 		if(eventType.equals(EVENT_TYPE_CLOSE)){
@@ -51,27 +61,27 @@ public class AuctionMessageTranslator implements MessageListener
 			return event;
 		}
 
-		public PriceSource isFrom(String sniperId)
+		public PriceSource isFrom(String sniperId) throws MissingValueException
 		{
 			return sniperId.equals(bidder()) ?AuctionEventListener.PriceSource.SNIPER :  AuctionEventListener.PriceSource.OTHER ;
 		}
 
-		private String bidder()
+		private String bidder() throws MissingValueException
 		{
 			return get("Bidder");
 		}
 
-		public int currentPrice()
+		public int currentPrice() throws NumberFormatException, MissingValueException
 		{
 			return getInt("CurrentPrice");
 		}
 		
-		public int increment()
+		public int increment() throws NumberFormatException, MissingValueException
 		{
 			return getInt("Increment");
 		}
 		
-		public String type()
+		public String type() throws MissingValueException
 		{
 			return get("Event");
 		}
@@ -88,15 +98,31 @@ public class AuctionMessageTranslator implements MessageListener
 		}
 
 
-		private String get(String field)
+		private String get(String name) throws MissingValueException
 		{
-			return fields.get(field);
+			String value = fields.get(name);
+			if(value == null){
+				throw new MissingValueException(name);
+			}
+			return value;
 		}
 		
-		private int getInt(String field)
+		private int getInt(String field) throws NumberFormatException, MissingValueException
 		{
 			return Integer.parseInt(get(field));
 		}
+		 
+		private static class MissingValueException extends Exception {
+			    /**
+			 * 
+			 */
+			private static final long serialVersionUID = -3128979671958977180L;
+
+				public MissingValueException(String fieldName) {
+			      super("Missing value for " + fieldName);
+			    }
+			  }
+		 
 	}
 	
 }

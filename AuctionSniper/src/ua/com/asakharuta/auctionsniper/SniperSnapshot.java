@@ -63,4 +63,9 @@ public SniperSnapshot losing(int currentPrice)
 {
 	return new SniperSnapshot(itemId, currentPrice, lastBid, SniperState.LOSING);
 }
+
+public SniperSnapshot failed()
+{
+	return new SniperSnapshot(itemId, 0, 0, SniperState.FAILED);
+}
 }

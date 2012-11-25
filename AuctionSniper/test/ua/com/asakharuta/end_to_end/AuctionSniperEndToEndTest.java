@@ -1,10 +1,11 @@
 package ua.com.asakharuta.end_to_end;
 
+import static ua.com.asakharuta.auctionsniper.common.Constants.SNIPER_XMPP_ID;
+
 import org.jivesoftware.smack.XMPPException;
 import org.junit.After;
 import org.junit.Test;
 
-import static ua.com.asakharuta.auctionsniper.common.Constants.*;
 import ua.com.asakharuta.auctionsniper.AuctionEventListener;
 import ua.com.asakharuta.auctionsniper.common.Constants;
 
@@ -152,6 +153,36 @@ public class AuctionSniperEndToEndTest
 	    application.hasShownSniperIsLosing(auction, 1207, 1098); 
 	    auction.announceClosed(); 
 	    application.hasShownSniperHasLostAuction(auction, 1207, 1098); 
+	  } 
+	
+	@Test public void 
+	  sniperReportsInvalidAuctionMessageAndStopsRespondingToEvents() 
+	      throws Exception 
+	  { 
+	    String brokenMessage = "a broken message"; 
+	    auction.startSellingItem(); 
+	    auction2.startSellingItem();
+	    
+	    application.startBiddingIn(auction, auction2); 
+	    auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID);
+	    
+	    auction.reportPrice(500, 20,  AuctionEventListener.PriceSource.OTHER); 
+	    auction.hasReceivedBid(520, SNIPER_XMPP_ID);
+	    
+	    auction.sendInvalidMessageContaining(brokenMessage); 
+	    application.hasShownSniperHasFailed(auction); 
+	    
+	    auction.reportPrice(520, 21,  AuctionEventListener.PriceSource.OTHER); 
+	    waitForAnotherAuctionEvent(); 
+	    
+	    application.reportsInvalidMessage(auction, brokenMessage); 
+	    application.hasShownSniperHasFailed(auction); 
+	  } 
+	
+	private void waitForAnotherAuctionEvent() throws Exception { 
+	    auction2.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID); 
+	    auction2.reportPrice(600, 6, AuctionEventListener.PriceSource.OTHER); 
+	    application.hasShownSniperIsBidding(auction2, 600, 606); 
 	  } 
 	
 	@After 
